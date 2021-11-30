@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: smart
+smart:
+  sections: '10,5,2.5,0'
+  percents: '10,5,2,0'
