@@ -75,6 +75,15 @@ public class HrRestController {
 		}
 	}
 	
-	
+	@GetMapping("/paymentgreater/{payment}")
+	public List<EmployeeDto> getPaymentGreater(@PathVariable int payment) {
+		ArrayList<EmployeeDto> greaterEmployee=new ArrayList<>();
+		for (EmployeeDto e : employees.values()) {
+			if (e.getPayment()>payment) {
+				greaterEmployee.add(e);
+			}
+		}
+		return greaterEmployee;
+	}
 	
 }
