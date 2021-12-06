@@ -16,6 +16,13 @@ import hu.webuni.hr.andro.service.SalaryService;
 public class HrApplication implements CommandLineRunner {
 	
 	private List<Employee> employees = new ArrayList<>();
+	
+	{
+		employees.add(new Employee((long) 723, "Teszt Elek", "rendszergazda", 450000, LocalDateTime.of(2019, 10, 2, 0, 0)));
+		employees.add(new Employee((long) 561, "Nap Pali", "grafikus", 600000, LocalDateTime.of(2015, 4, 12, 0, 0)));
+		employees.add(new Employee((long) 278, "Tra Pista", "rendszer tervező", 800000, LocalDateTime.of(2011, 2, 23, 0, 0)));
+	}
+	
 	@Autowired
 	SalaryService salaryService;
 	
@@ -25,22 +32,12 @@ public class HrApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		this.setTestEmployeeList();
 		for (Employee e : employees) {
 			System.out.println("Emelés előtt: "+e);
 			salaryService.setEmployeeNewPayment(e);
 			System.out.println("Emelés után: "+e);
 		}
 		
-	}
-	
-	private void setTestEmployeeList() {
-		Employee e1=new Employee((long) 723, "Teszt Elek", "rendszergazda", 450000, LocalDateTime.of(2019, 10, 2, 0, 0));
-		employees.add(e1);
-		Employee e2=new Employee((long) 561, "Nap Pali", "grafikus", 600000, LocalDateTime.of(2015, 4, 12, 0, 0));
-		employees.add(e2);
-		Employee e3=new Employee((long) 278, "Tra Pista", "rendszer tervező", 800000, LocalDateTime.of(2011, 2, 23, 0, 0));
-		employees.add(e3);
 	}
 	
 }
