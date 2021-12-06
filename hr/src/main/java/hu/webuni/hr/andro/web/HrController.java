@@ -15,7 +15,7 @@ import hu.webuni.hr.andro.model.Employee;
 
 @Controller
 public class HrController {
-	//
+	
 	private List<Employee> employees = new ArrayList<>();
 	
 	{
@@ -33,7 +33,7 @@ public class HrController {
 	
 	@GetMapping("/")
 	public String home() {
-		return "index";
+		return "redirect:/list";
 	}
 	
 	@GetMapping("/list")
@@ -46,7 +46,7 @@ public class HrController {
 	public String detailsEmployee(@PathVariable long id, Map<String,Object> model) {
 		Employee emp = this.getEmployee(id);
 		if (emp == null) {
-			return "redirect:/notfound";
+			return "redirect:/error";
 		}else {
 			model.put("employee", this.getEmployee(id));
 			return "details";
@@ -57,12 +57,11 @@ public class HrController {
 	public String addEmployee(Map<String,Object> model) {
 		model.put("employee", new Employee(0L, "", "", 0, null));
 		model.put("type", "add");
-		return "modify";//
+		return "modify";
 	}
 	
 	@PostMapping("addModEmployee")
 	public String addModEmployeeAction(@RequestParam String type, Employee employee, Map<String,Object> model) {
-		//System.out.println(type);
 		List<String> errors=new ArrayList<>();
 		boolean error=false;
 		if (employee.getName().equals("")) {
@@ -87,7 +86,7 @@ public class HrController {
 		}
 		if (error) {
 			model.put("employee", employee);
-			model.put("type", "add");
+			model.put("type", type);
 			model.put("errors", errors);
 			return "modify";
 		} else {
@@ -105,7 +104,7 @@ public class HrController {
 	public String modifyEmployee(@PathVariable long id, Map<String,Object> model) {
 		Employee emp = this.getEmployee(id);
 		if (emp == null) {
-			return "redirect:/notfound";
+			return "redirect:/error";
 		}else {
 			model.put("employee", emp);
 			model.put("type", "modify");
@@ -117,16 +116,16 @@ public class HrController {
 	public String deleteEmployee(@PathVariable long id) {
 		Employee emp = this.getEmployee(id);
 		if (emp == null) {
-			return "redirect:/notfound";
+			return "redirect:/error";
 		}else {
 			employees.remove(emp);
 			return "redirect:/list";			
 		}
 	}
 	
-	@GetMapping("/notfound")
+	@GetMapping("/error")
 	public String notFound() {
-		return "notfound";
+		return "error";
 	}
 	
 	
