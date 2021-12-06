@@ -1,6 +1,9 @@
 package hu.webuni.hr.andro.dto;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import hu.webuni.hr.andro.model.Employee;
 
 public class EmployeeDto {
 	private Long id;
@@ -48,5 +51,21 @@ public class EmployeeDto {
 		this.entrance = entrance;
 	}
 	
+	public long getMonthsFromEntrance() {
+		LocalDateTime to=LocalDateTime.now();
+		long months = this.getEntrance().until(to, ChronoUnit.MONTHS );
+		return months;
+	}
+	
+	@Override
+	public String toString() {
+		return this.id+" "+this.name+" ("+this.rank+") - "+this.payment+" - "+this.entrance;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return this.getId().equals(((Employee)obj).getId());
+	}
 	
 }
