@@ -60,4 +60,10 @@ public class Employee {
 		return this.id+" "+this.name+" ("+this.rank+") - "+this.payment+" - "+this.entrance;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return this.getId().equals(((Employee)obj).getId());
+	}
+	
 }
