@@ -3,8 +3,6 @@ package hu.webuni.hr.andro.dto;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import hu.webuni.hr.andro.model.Employee;
-
 public class EmployeeDto {
 	private Long id;
 	private String name;
@@ -65,7 +63,10 @@ public class EmployeeDto {
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
-		return this.getId().equals(((Employee)obj).getId());
+		if (obj instanceof EmployeeDto) {
+			return this.getId().equals(((EmployeeDto)obj).getId());
+		}
+		return false;
 	}
 	
 }

@@ -1,35 +1,24 @@
 package hu.webuni.hr.andro.web;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.dto.EmployeeDto;
+import hu.webuni.hr.andro.repository.EmployeeDtoRepository;
 
 @Controller
 public class HrController {
 	
-	private List<Employee> employees = new ArrayList<>();
-	
-	{
-		employees.add(new Employee(723L, "Teszt Elek", "rendszergazda", 450000, LocalDateTime.of(2019, 10, 2, 0, 0)));
-		employees.add(new Employee(561L, "Nap Pali", "grafikus", 600000, LocalDateTime.of(2015, 4, 12, 0, 0)));
-		employees.add(new Employee(278L, "Tra Pista", "rendszer tervező", 800000, LocalDateTime.of(2011, 2, 23, 0, 0)));
-	}
-	
-	private Employee getEmployee(long id) {
-		for (Employee e:employees) {
-			if (e.getId() == id) return e;
-		}
-		return null;
-	}
+	@Autowired
+	EmployeeDtoRepository employeeRepo;
 	
 	@GetMapping("/")
 	public String home() {
@@ -38,30 +27,30 @@ public class HrController {
 	
 	@GetMapping("/list")
 	public String listEmployees(Map<String,Object> model) {
-		model.put("employees", employees);
+		model.put("employees", employeeRepo.getEmployees());
 		return "list";
 	}
 	
 	@GetMapping("/details/{id}")
 	public String detailsEmployee(@PathVariable long id, Map<String,Object> model) {
-		Employee emp = this.getEmployee(id);
+		EmployeeDto emp = employeeRepo.getEmployee(id);
 		if (emp == null) {
 			return "redirect:/error";
 		}else {
-			model.put("employee", this.getEmployee(id));
+			model.put("employee", employeeRepo.getEmployee(id));
 			return "details";
 		}
 	}
 	
 	@GetMapping("add")
 	public String addEmployee(Map<String,Object> model) {
-		model.put("employee", new Employee(0L, "", "", 0, null));
+		model.put("employee", new EmployeeDto(0L, "", "", 0, null));
 		model.put("type", "add");
 		return "modify";
 	}
 	
 	@PostMapping("addModEmployee")
-	public String addModEmployeeAction(@RequestParam String type, Employee employee, Map<String,Object> model) {
+	public String addModEmployeeAction(@RequestParam String type, EmployeeDto employee, Map<String,Object> model) {
 		List<String> errors=new ArrayList<>();
 		boolean error=false;
 		if (employee.getName().equals("")) {
@@ -80,7 +69,7 @@ public class HrController {
 			error=true;
 			errors.add("Entrance date is required!");
 		}
-		if (type.equals("add") && this.getEmployee(employee.getId()) != null) {
+		if (type.equals("add") && employeeRepo.getEmployee(employee.getId()) != null) {
 			error=true;
 			errors.add("Employee exist with this id!");
 		}
@@ -91,10 +80,10 @@ public class HrController {
 			return "modify";
 		} else {
 			if (type.equals("add")) {
-				employees.add(employee);
+				employeeRepo.addEmployee(employee);
 			}else {
-				employees.remove(this.getEmployee(employee.getId()));
-				employees.add(employee);
+				employeeRepo.deleteEmployee(employeeRepo.getEmployee(employee.getId()));
+				employeeRepo.addEmployee(employee);
 			}
 			return "redirect:list";
 		}
@@ -102,7 +91,7 @@ public class HrController {
 	
 	@GetMapping("/modify/{id}")
 	public String modifyEmployee(@PathVariable long id, Map<String,Object> model) {
-		Employee emp = this.getEmployee(id);
+		EmployeeDto emp = employeeRepo.getEmployee(id);
 		if (emp == null) {
 			return "redirect:/error";
 		}else {
@@ -114,11 +103,11 @@ public class HrController {
 	
 	@GetMapping("/delete/{id}")
 	public String deleteEmployee(@PathVariable long id) {
-		Employee emp = this.getEmployee(id);
+		EmployeeDto emp = employeeRepo.getEmployee(id);
 		if (emp == null) {
 			return "redirect:/error";
 		}else {
-			employees.remove(emp);
+			employeeRepo.deleteEmployee(emp);
 			return "redirect:/list";			
 		}
 	}
