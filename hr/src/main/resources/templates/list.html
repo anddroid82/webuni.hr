@@ -11,14 +11,15 @@
 	<h3>Employees list</h3>
 	<a class="btn btn-primary" style="margin-bottom:0.5rem" th:href="@{/add}">Add employee</a>
 	<table class="table table-striped">
-		<tr><th>Id</th><th>Name</th><th>Rank</th><th>Payment</th><th>Entrance</th><th>Details</th></tr>
+		<tr><th>Id</th><th>Name</th><th>Rank</th><th>Payment</th><th>Entrance</th><th>Delete</th></tr>
 		<tr th:each="e : ${employees}">
 			<td th:text="${e.id}">id</td>
-			<td th:text="${e.name}">name</td>
+			<td><a th:text="${e.name}" th:href="@{'/modify/'+${e.id}}">name</a></td>
 			<td th:text="${e.rank}">rank</td>
 			<td th:text="${e.payment}">payment</td>
 			<td th:text="${e.entrance}">entrance</td>
-			<td><a th:href="@{/details/}+${e.id}">details</a></td>
+			<!-- <td><a th:href="@{/details/}+${e.id}">details</a></td> -->
+			<td><a th:href="@{/delete/}+${e.id}" class="btn btn-danger">delete</a></td>
 		</tr>
 	</table>
 </div>
