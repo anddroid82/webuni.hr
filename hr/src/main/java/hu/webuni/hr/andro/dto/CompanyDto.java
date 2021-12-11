@@ -3,11 +3,17 @@ package hu.webuni.hr.andro.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@JsonFilter("CompanyFilterExcludeEmployees")
 public class CompanyDto {
 
 	private String id;
 	private String name;
 	private String address;
+	
+	@JsonManagedReference
 	private List<EmployeeDto> employees = new ArrayList<>();
 
 	public CompanyDto(String id, String name, String address) {
@@ -21,6 +27,7 @@ public class CompanyDto {
 		EmployeeDto emp = this.getEmployee(employee.getId());
 		if (emp == null) {
 			this.employees.add(employee);
+			employee.setCompany(this);
 			return employee;
 		}
 		return null;
@@ -38,6 +45,7 @@ public class CompanyDto {
 		EmployeeDto emp = this.getEmployee(id);
 		if (emp != null) {
 			this.employees.remove(emp);
+			emp.setCompany(null);
 			return emp;
 		}
 		return null;

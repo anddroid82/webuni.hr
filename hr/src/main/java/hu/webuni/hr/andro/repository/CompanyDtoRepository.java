@@ -31,8 +31,8 @@ public class CompanyDtoRepository {
 		companies.add(c3);
 	}
 	
-	@Autowired
-	public CompanyDtoRepository(EmployeeDtoRepository employeeRepo) {
+	
+	public CompanyDtoRepository(@Autowired EmployeeDtoRepository employeeRepo) {
 		this.employeeRepo = employeeRepo;
 		this.setDefaultValues();
 	}
@@ -75,8 +75,9 @@ public class CompanyDtoRepository {
 
 	public CompanyDto getCompany(String id) {
 		for (CompanyDto c : companies) {
-			if (c.getId() == id)
+			if (c.getId().equals(id)) {
 				return c;
+			}
 		}
 		return null;
 	}

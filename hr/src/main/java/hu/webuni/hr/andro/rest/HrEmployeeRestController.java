@@ -23,16 +23,6 @@ public class HrEmployeeRestController {
 
 	@Autowired
 	private EmployeeDtoRepository employeeRepo;
-	
-	/*private Map<Long,EmployeeDto> employees = new HashMap<>();
-
-	{
-		employees.put(723L,new EmployeeDto(723L, "Teszt Elek", "rendszergazda", 450000,
-				LocalDateTime.of(2019, 10, 2, 0, 0)));
-		employees.put(561L,new EmployeeDto(561L, "Nap Pali", "grafikus", 600000, LocalDateTime.of(2015, 4, 12, 0, 0)));
-		employees.put(278L,new EmployeeDto(278L, "Tra Pista", "rendszer tervező", 800000,
-				LocalDateTime.of(2011, 2, 23, 0, 0)));
-	}*/
 
 	@GetMapping
 	public List<EmployeeDto> getAll(){

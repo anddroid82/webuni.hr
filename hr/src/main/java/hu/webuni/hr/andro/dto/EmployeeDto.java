@@ -3,12 +3,17 @@ package hu.webuni.hr.andro.dto;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 public class EmployeeDto {
 	private Long id;
 	private String name;
 	private String rank;
 	private int payment;
 	private LocalDateTime entrance;
+	
+	@JsonBackReference
+	private CompanyDto company;
 	
 	public EmployeeDto(Long id, String name, String rank, int payment, LocalDateTime entrance) {
 		super();
@@ -17,6 +22,12 @@ public class EmployeeDto {
 		this.rank = rank;
 		this.payment = payment;
 		this.entrance = entrance;
+	}
+	public CompanyDto getCompany() {
+		return company;
+	}
+	public void setCompany(CompanyDto company) {
+		this.company = company;
 	}
 	public Long getId() {
 		return id;
