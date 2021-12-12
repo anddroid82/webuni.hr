@@ -2,6 +2,7 @@ package hu.webuni.hr.andro.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -13,21 +14,22 @@ public class CompanyDto {
 	private String name;
 	private String address;
 	
-	@JsonManagedReference
-	private List<EmployeeDto> employees = new ArrayList<>();
+	//@JsonManagedReference
+	private List<EmployeeDto> employees;
 
 	public CompanyDto(String id, String name, String address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
+		this.employees = new ArrayList<>();
 	}
 
 	public EmployeeDto addEmployee(EmployeeDto employee) {
 		EmployeeDto emp = this.getEmployee(employee.getId());
 		if (emp == null) {
-			this.employees.add(employee);
 			employee.setCompany(this);
+			this.employees.add(employee);
 			return employee;
 		}
 		return null;
@@ -44,11 +46,20 @@ public class CompanyDto {
 	public EmployeeDto removeEmployee(long id) {
 		EmployeeDto emp = this.getEmployee(id);
 		if (emp != null) {
-			this.employees.remove(emp);
 			emp.setCompany(null);
+			this.employees.remove(emp);
 			return emp;
 		}
 		return null;
+	}
+	
+	public void removeAllEmployee() {
+		ListIterator<EmployeeDto> iterator = this.employees.listIterator();
+		while (iterator.hasNext()) {
+			EmployeeDto emp = iterator.next();
+			emp.setCompany(null);
+			iterator.remove();
+		}
 	}
 
 	public String getId() {

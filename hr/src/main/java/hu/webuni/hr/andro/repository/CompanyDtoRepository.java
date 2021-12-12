@@ -14,7 +14,7 @@ public class CompanyDtoRepository {
 
 	private EmployeeDtoRepository employeeRepo;
 	
-	private List<CompanyDto> companies = new ArrayList<>();
+	private List<CompanyDto> companies;
 	
 	public void setDefaultValues() {
 		CompanyDto c1=new CompanyDto("abc001", "Teszt Cég 01", "Teszt Cím 01");
@@ -34,6 +34,7 @@ public class CompanyDtoRepository {
 	
 	public CompanyDtoRepository(@Autowired EmployeeDtoRepository employeeRepo) {
 		this.employeeRepo = employeeRepo;
+		this.companies = new ArrayList<>();
 		this.setDefaultValues();
 	}
 

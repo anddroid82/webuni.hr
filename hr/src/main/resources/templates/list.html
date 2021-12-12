@@ -18,7 +18,7 @@
 			<td th:text="${e.rank}">rank</td>
 			<td th:text="${e.payment}">payment</td>
 			<td th:text="${e.entrance}">entrance</td>
-			<td th:text="${e.company.name}">company</td>
+			<td th:text="${e.company?.name}"></td>
 			<!-- <td><a th:href="@{/details/}+${e.id}">details</a></td> -->
 			<td><a th:href="@{'/delete/'+${e.id}}" class="btn btn-danger">delete</a></td>
 		</tr>

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class EmployeeDto {
 	private Long id;
@@ -60,6 +61,7 @@ public class EmployeeDto {
 		this.entrance = entrance;
 	}
 	
+	@JsonIgnore
 	public long getMonthsFromEntrance() {
 		LocalDateTime to=LocalDateTime.now();
 		long months = this.getEntrance().until(to, ChronoUnit.MONTHS );

@@ -3,6 +3,8 @@ package hu.webuni.hr.andro.model;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Employee {
 	private Long id;
 	private String name;
@@ -58,7 +60,7 @@ public class Employee {
 	public void setEntrance(LocalDateTime entrance) {
 		this.entrance = entrance;
 	}
-
+	
 	public long getMonthsFromEntrance() {
 		LocalDateTime to = LocalDateTime.now();
 		long months = this.getEntrance().until(to, ChronoUnit.MONTHS);

@@ -9,7 +9,6 @@ import hu.webuni.hr.andro.model.Employee;
 public class SalaryService {
 	
 	@Autowired
-	//@Qualifier("smart")
 	EmployeeService employeeService;
 	
 	public void setEmployeeNewPayment(Employee employee) {

@@ -120,5 +120,24 @@ public class HrCompanyRestController {
 		return null;
 	}
 	
+	@PostMapping("/{companyId}/changeEmployees")
+	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable String companyId) {
+		CompanyDto company = this.companyRepo.getCompany(companyId);
+		if (company != null) {
+			company.removeAllEmployee();
+			for (EmployeeDto emp : employees) {
+				EmployeeDto temp = employeeRepo.getEmployee(emp.getId());
+				if (temp == null) {
+					employeeRepo.addEmployee(emp);
+					temp=emp;
+				}
+				company.addEmployee(temp);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 }
