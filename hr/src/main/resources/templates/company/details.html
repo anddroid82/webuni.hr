@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Company details</title>
+<th:block th:replace="fragments/header.html :: scripts"></th:block >
+</head>
+<body>
+
+<div class="container">
+<h3>Company details</h3>
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title"><span th:text="${company.name}">name</span></h5>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Id: </strong><span th:text="${company.id}">id</span></li>
+    <li class="list-group-item"><strong>Address: </strong><span th:text="${company.address}">address</span></li>
+  </ul>
+  <!--<div class="card-body">
+    <a th:href="@{/company/edit/}+${company.id}" class="card-link">Edit</a>
+    <a th:href="@{/company/delete/}+${company.id}" class="card-link">Delete</a>
+  </div>
+  -->
+</div>
+<h4>Employee of company</h4>
+<div th:replace="fragments/employee_list.html :: employee_list"></div>
+<a th:href="@{/list}" class="btn btn-primary" style="margin-top: 0.5rem">Back</a>
+</div>
+
+
+</body>
+</html>

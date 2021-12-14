@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
+import hu.webuni.hr.andro.repository.CompanyDtoRepository;
 import hu.webuni.hr.andro.repository.EmployeeDtoRepository;
 
 @Controller
@@ -19,6 +21,9 @@ public class HrController {
 	
 	@Autowired
 	EmployeeDtoRepository employeeRepo;
+	
+	@Autowired
+	CompanyDtoRepository companyRepo;
 	
 	@GetMapping("/")
 	public String home() {
@@ -28,6 +33,7 @@ public class HrController {
 	@GetMapping("/list")
 	public String listEmployees(Map<String,Object> model) {
 		model.put("employees", employeeRepo.getEmployees());
+		model.put("referer", "employeelist");
 		return "list";
 	}
 	
@@ -110,6 +116,15 @@ public class HrController {
 			employeeRepo.deleteEmployee(emp);
 			return "redirect:/list";			
 		}
+	}
+	
+	@GetMapping("/company/{id}/details")
+	public String getCompanyData(@PathVariable String id, Map<String, Object> model) {
+		CompanyDto companyDto = companyRepo.getCompany(id);
+		model.put("company", companyDto);
+		model.put("employees", companyDto.getEmployees());
+		model.put("referer", "companydetails");
+		return "company/details";
 	}
 	
 	@GetMapping("/error")
