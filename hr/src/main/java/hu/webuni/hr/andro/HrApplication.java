@@ -36,6 +36,7 @@ public class HrApplication implements CommandLineRunner {
 			System.out.println("Emelés előtt: "+e);
 			salaryService.setEmployeeNewPayment(e);
 			System.out.println("Emelés után: "+e);
+			System.out.println("");
 		}
 		
 	}
