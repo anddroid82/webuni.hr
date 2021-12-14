@@ -88,8 +88,16 @@ public class HrController {
 			if (type.equals("add")) {
 				employeeRepo.addEmployee(employee);
 			}else {
-				employeeRepo.deleteEmployee(employeeRepo.getEmployee(employee.getId()));
-				employeeRepo.addEmployee(employee);
+				//#TODO ezt módosítani kell, nem szabad törölni a repobol
+				if (type.equals("modify")) {
+					EmployeeDto empFromRepo = employeeRepo.getEmployee(employee.getId());
+					empFromRepo.setName(employee.getName());
+					empFromRepo.setRank(employee.getRank());
+					empFromRepo.setPayment(employee.getPayment());
+					empFromRepo.setEntrance(employee.getEntrance());;
+				}else {
+					employeeRepo.addEmployee(employee);
+				}
 			}
 			return "redirect:list";
 		}
