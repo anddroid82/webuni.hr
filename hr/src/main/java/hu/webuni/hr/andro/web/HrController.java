@@ -127,6 +127,19 @@ public class HrController {
 		return "company/details";
 	}
 	
+	@GetMapping("/company/{companyId}/employeedelete/{employeeId}")
+	public String deleteEmployeeFromCompany(@PathVariable String companyId,@PathVariable long employeeId, Map<String, Object> model) {
+		CompanyDto companyDto = companyRepo.getCompany(companyId);
+		if (companyDto == null) {
+			return "redirect:/error";
+		}
+		EmployeeDto employeeDto = companyDto.removeEmployee(employeeId);
+		model.put("company", companyDto);
+		model.put("employees", companyDto.getEmployees());
+		model.put("referer", "companydetails");
+		return "company/details";
+	}
+	
 	@GetMapping("/error")
 	public String notFound() {
 		return "error";

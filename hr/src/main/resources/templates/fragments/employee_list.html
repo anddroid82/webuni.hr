@@ -21,7 +21,7 @@
 			<td th:if="${referer == 'employeelist'}"><a th:text="${e.company?.name}" th:href="@{'/company/'+${e.company?.id}+'/details'}"></a></td >
 			<td>
 				<a th:if="${referer == 'employeelist'}" th:href="@{'/delete/'+${e.id}}" class="btn btn-danger employee_delete_link">delete</a >
-				<a th:if="${referer == 'companydetails'}" th:href="@{'/company/'+${company.id}+'/employee/delete/'+${e.id}}" class="btn btn-danger employee_from_company_delete_link">delete</a >
+				<a th:if="${referer == 'companydetails'}" th:href="@{'/company/'+${company.id}+'/employeedelete/'+${e.id}}" class="btn btn-danger employee_from_company_delete_link">delete</a >
 			</td>
 		</tr>
 	</table>
