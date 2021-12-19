@@ -7,7 +7,7 @@ import hu.webuni.hr.andro.config.SmartConfigurationProperties;
 import hu.webuni.hr.andro.model.Employee;
 
 @Service
-public class SmartEmployeeService implements EmployeeService {
+public class SmartEmployeeService extends EmployeeAbstractService implements EmployeeService {
 	
 	@Autowired
 	SmartConfigurationProperties smartConfProp;

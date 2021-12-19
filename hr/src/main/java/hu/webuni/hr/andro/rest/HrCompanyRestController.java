@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -24,19 +26,30 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
-import hu.webuni.hr.andro.repository.CompanyDtoRepository;
-import hu.webuni.hr.andro.repository.EmployeeDtoRepository;
+import hu.webuni.hr.andro.mapper.CompanyMapper;
+import hu.webuni.hr.andro.mapper.EmployeeMapper;
+import hu.webuni.hr.andro.model.Company;
+import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.service.CompanyService;
+import hu.webuni.hr.andro.service.EmployeeService;
 
 @RestController
 @RequestMapping("/api/companies")
 public class HrCompanyRestController {
 
 	@Autowired
-	CompanyDtoRepository companyRepo;
+	CompanyService companyService;
 	
 	@Autowired
-	EmployeeDtoRepository employeeRepo;
+	EmployeeService employeeService;
+	
+	@Autowired
+	CompanyMapper companyMapper;
+	
+	@Autowired
+	EmployeeMapper employeeMapper;
 
+	/*
 	private MappingJacksonValue getMappingJSON(Object object, boolean full) {
 		List<String> fields = new ArrayList<>(Arrays.asList("id", "name", "address"));
 		if (full) {
@@ -48,35 +61,52 @@ public class HrCompanyRestController {
 		MappingJacksonValue mapping = new MappingJacksonValue(object);
 		mapping.setFilters(filter);
 		return mapping;
-	}
-
+	}*/
+	
 	@GetMapping
-	public MappingJacksonValue getAll(@RequestParam(required = false) boolean full) {
-		List<CompanyDto> companies = new ArrayList<>(companyRepo.getCompanies());
-		return this.getMappingJSON(companies, full);
+	public ResponseEntity<List<CompanyDto>> getAll(@RequestParam(required = false) boolean full) {
+		List<CompanyDto> companies = null;
+		if (full) {
+			companies = new ArrayList<>(companyMapper.companiesToCompanyDtos(companyService.getCompanies()));
+		}else {
+			companies = new ArrayList<>(companyMapper.companiesToCompanyDtosWithoutEmployees(companyService.getCompanies()));
+		}
+		return ResponseEntity.ok(companies);
 	}
 
 	@GetMapping("/{id}")
-	public MappingJacksonValue getCompany(@PathVariable String id, @RequestParam(required = false) boolean full) {
-		CompanyDto companyDto = companyRepo.getCompany(id);
-		return this.getMappingJSON(companyDto, full);
-
+	public ResponseEntity<CompanyDto> getCompany(@PathVariable String id, @RequestParam(required = false) boolean full) {
+		Company c = companyService.getCompany(id);
+		if (c == null) {
+			return ResponseEntity.notFound().build();
+		}else {
+			if (full) {
+				return ResponseEntity.ok(companyMapper.companyToCompanyDto(companyService.getCompany(id)));
+			}else {
+				return ResponseEntity.ok(companyMapper.companyToCompanyDtoWithoutEmployees(companyService.getCompany(id))); 
+			}
+		}
 	}
 
 	@PostMapping
-	public CompanyDto createCompany(@RequestBody CompanyDto company) {
-		companyRepo.addCompany(company);
-		return company;
+	public ResponseEntity<CompanyDto> createCompany(@RequestBody Company company) {
+		Company c = companyService.getCompany(company.getId());
+		if (c == null) {
+			companyService.addCompany(company);
+			return ResponseEntity.ok(companyMapper.companyToCompanyDto(company));
+		}else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CompanyDto> modifyCompany(@PathVariable String id, @RequestBody CompanyDto company) {
-		CompanyDto comp = companyRepo.getCompany(id);
+	public ResponseEntity<CompanyDto> modifyCompany(@PathVariable String id, @RequestBody Company company) {
+		Company comp = companyService.getCompany(id);
 		if (comp != null) {
-			companyRepo.deleteCompany(comp);
-			company.setId(id);
-			companyRepo.addCompany(company);
-			return ResponseEntity.ok(company);
+			//companyService.deleteCompany(comp);
+			comp.setName(company.getName());
+			comp.setAddress(company.getAddress());
+			return ResponseEntity.ok(companyMapper.companyToCompanyDto(company));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
@@ -84,51 +114,50 @@ public class HrCompanyRestController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CompanyDto> deleteCompany(@PathVariable String id) {
-		CompanyDto company = companyRepo.getCompany(id);
+		Company company = companyService.getCompany(id);
 		if (company == null) {
 			return ResponseEntity.notFound().build();
 		} else {
-			companyRepo.deleteCompany(company);
-			return ResponseEntity.ok(company);
+			companyService.deleteCompany(company);
+			return ResponseEntity.ok(companyMapper.companyToCompanyDto(company));
 		}
 	}
 	
 	@PostMapping("/{companyId}/addEmployee")
-	public EmployeeDto addEmployeeToCompany(@RequestBody EmployeeDto employee,@PathVariable String companyId) {
-		EmployeeDto emp = employeeRepo.getEmployee(employee.getId());
-		CompanyDto comp = companyRepo.getCompany(companyId);
+	public ResponseEntity<EmployeeDto> addEmployeeToCompany(@RequestBody Employee employee,@PathVariable String companyId) {
+		Employee emp = employeeService.getEmployee(employee.getId());
+		Company comp = companyService.getCompany(companyId);
 		if (emp == null) {
-			//ha még nem volt ilyen id-vel alkalmazott, akkor az employeeRepo-ba is felvesszük
-			employeeRepo.addEmployee(employee);
+			employeeService.addEmployee(employee);
 			//hozzáadjuk a company-hoz, ha volt ilyen
 			if (comp != null) {
-				return comp.addEmployee(employee);
+				return ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(employee)));
 			}
 		}else {
-			return comp.addEmployee(emp); 
+			return ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(emp))); 
 		}
-		return null;
+		return ResponseEntity.notFound().build();
 	}
 	
 	@GetMapping("/{companyId}/deleteEmployee/{employeeId}")
-	public EmployeeDto deleteEmployeeFromCompany(@PathVariable String companyId, @PathVariable long employeeId) {
-		CompanyDto comp = companyRepo.getCompany(companyId);
+	public ResponseEntity<EmployeeDto> deleteEmployeeFromCompany(@PathVariable String companyId, @PathVariable long employeeId) {
+		Company comp = companyService.getCompany(companyId);
 		if (comp != null) {
-			EmployeeDto emp = comp.removeEmployee(employeeId);
-			return emp;
+			Employee emp = comp.removeEmployee(employeeId);
+			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}
-		return null;
+		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping("/{companyId}/changeEmployees")
-	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable String companyId) {
-		CompanyDto company = this.companyRepo.getCompany(companyId);
+	public boolean changeEmployeeList(@RequestBody List<Employee> employees, @PathVariable String companyId) {
+		Company company = this.companyService.getCompany(companyId);
 		if (company != null) {
 			company.removeAllEmployee();
-			for (EmployeeDto emp : employees) {
-				EmployeeDto temp = employeeRepo.getEmployee(emp.getId());
+			for (Employee emp : employees) {
+				Employee temp = employeeService.getEmployee(emp.getId());
 				if (temp == null) {
-					employeeRepo.addEmployee(emp);
+					employeeService.addEmployee(emp);
 					temp=emp;
 				}
 				company.addEmployee(temp);

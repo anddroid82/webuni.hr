@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import hu.webuni.hr.andro.model.Employee;
 
 @Service
-public class DefaultEmployeeService implements EmployeeService {
+public class DefaultEmployeeService extends EmployeeAbstractService implements EmployeeService {
 
 	@Override
 	public int getPayRaisePercent(Employee employee) {

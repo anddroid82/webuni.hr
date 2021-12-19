@@ -3,15 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Employees list</title>
-<th:block th:replace="fragments/header.html :: scripts"></th:block >
+<th:block th:replace="fragments/header.html :: scripts"></th:block>
 </head>
 <body>
 
-<div class="container">
-	<h3>Employees list</h3>
-	<a class="btn btn-primary" style="margin-bottom:0.5rem" th:href="@{/add}">Add employee</a>
-	<div th:replace="fragments/employee_list.html :: employee_list"></div>
-</div>
+	<div class="container">
+		<h3>Employees list</h3>
+		<a class="btn btn-primary" style="margin-bottom: 0.5rem"
+			th:href="@{/add}">Add employee</a>
+		<div th:replace="fragments/employee_list.html :: employee_list"></div>
+
+		<div>
+			<a href="/companies" class="btn btn-primary">Companies</a>
+		</div>
+
+	</div>
+
 
 
 </body>

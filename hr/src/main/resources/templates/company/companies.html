@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Companies list</title>
+<th:block th:replace="fragments/header.html :: scripts"></th:block>
+</head>
+<body>
+
+	<div class="container">
+		<h3>Companies list</h3>
+		<!-- <a class="btn btn-primary" style="margin-bottom: 0.5rem"
+			th:href="@{/add}">Add employee</a>  -->
+		
+		<table class="table table-striped">
+			<tr>
+				<th>Id</th><th>Name</th><th>Address</th>
+			</tr>
+			<tr th:each="company : ${companies}">
+				<td th:text="${company.id}">id</td>
+				<td><a th:href="@{/company/{id}/details(id=${company.id})}" th:text="${company.name}">name</a></td>
+				<td th:text="${company.address}">address</td>
+			</tr>
+		</table>
+		
+		<div>
+			<a href="/list" class="btn btn-primary">Employees</a>
+		</div>
+
+	</div>
+
+
+
+</body>
+</html>

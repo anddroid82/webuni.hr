@@ -11,14 +11,14 @@
 	<h3>Employees list</h3>
 	<a class="btn btn-primary" style="margin-bottom:0.5rem" th:href="@{/add}">Add employee</a>
 	<table class="table table-striped" th:fragment="employee_list">
-		<tr><th>Id</th><th>Name</th><th>Rank</th><th>Payment</th><th>Entrance</th><th th:if="${referer == 'employeelist'}">Company</th ><th>Delete</th></tr>
+		<tr><th>Id</th><th>Name</th><th>Rank</th><th>Payment</th><th>Entrance</th><th>Delete</th></tr>
 		<tr th:each="e : ${employees}">
 			<td th:text="${e.id}">id</td>
 			<td><a th:text="${e.name}" th:href="@{'/modify/'+${e.id}}">name</a></td>
 			<td th:text="${e.rank}">rank</td>
 			<td th:text="${e.payment}">payment</td>
 			<td th:text="${e.entrance}">entrance</td>
-			<td th:if="${referer == 'employeelist'}"><a th:text="${e.company?.name}" th:href="@{'/company/'+${e.company?.id}+'/details'}"></a></td >
+			<!-- <td th:if="${referer == 'employeelist'}"><a th:text="${e.company?.name}" th:href="@{'/company/'+${e.company?.id}+'/details'}"></a></td >  -->
 			<td>
 				<a th:if="${referer == 'employeelist'}" th:href="@{'/delete/'+${e.id}}" class="btn btn-danger employee_delete_link">delete</a >
 				<a th:if="${referer == 'companydetails'}" th:href="@{'/company/'+${company.id}+'/employeedelete/'+${e.id}}" class="btn btn-danger employee_from_company_delete_link">delete</a >

@@ -2,14 +2,20 @@ package hu.webuni.hr.andro.model;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import hu.webuni.hr.andro.validation.BeforeNow;
 
 public class Employee {
+	
 	private Long id;
+	@NotBlank
 	private String name;
+	@NotBlank
 	private String rank;
+	@Min(1)
 	private int payment;
+	@BeforeNow //a @Past is jó lett volna, csak létre akartam hozni egy sajátot, hogy hogy működik
 	private LocalDateTime entrance;
 
 	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance) {

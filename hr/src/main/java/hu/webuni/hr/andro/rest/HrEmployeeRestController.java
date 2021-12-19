@@ -3,8 +3,12 @@ package hu.webuni.hr.andro.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,46 +17,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.andro.dto.EmployeeDto;
-import hu.webuni.hr.andro.repository.EmployeeDtoRepository;
+import hu.webuni.hr.andro.mapper.EmployeeMapper;
+import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.service.EmployeeService;
 
 @RestController
 @RequestMapping("/api/employees")
 public class HrEmployeeRestController {
 
+	//@Autowired
+	//private EmployeeDtoRepository employeeService;
+	
 	@Autowired
-	private EmployeeDtoRepository employeeRepo;
+	EmployeeService employeeService;
+	
+	@Autowired
+	EmployeeMapper employeeMapper;
 
 	@GetMapping
 	public List<EmployeeDto> getAll(){
-		return new ArrayList<>(employeeRepo.getEmployees());
+		return employeeMapper.employeesToDtos(employeeService.getEmployees());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<EmployeeDto> getEmployee(@PathVariable long id) {
-		EmployeeDto employeeDto=employeeRepo.getEmployee(id);
-		if (employeeDto == null) {
+		Employee employee=employeeService.getEmployee(id);
+		if (employee == null) {
 			return ResponseEntity.notFound().build();
 		}else {
-			return ResponseEntity.ok(employeeDto);
+			return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
 		}
 	}
 	
 	@PostMapping
-	public EmployeeDto createEmployee(@RequestBody EmployeeDto employee) {
-		employeeRepo.addEmployee(employee);
-		return employee;
+	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid Employee employee, BindingResult bindingResult) {
+		Employee emp = employeeService.getEmployee(employee.getId());
+		if (bindingResult.hasErrors() || emp!=null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		employeeService.addEmployee(employee);
+		return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody EmployeeDto employee) {
-		EmployeeDto emp = employeeRepo.getEmployee(id);
+	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody Employee employee) {
+		Employee emp = employeeService.getEmployee(id);
 		if (emp != null) {
-			employee.setId(id);
-			employeeRepo.deleteEmployee(employee);
-			employeeRepo.addEmployee(employee);
-			return ResponseEntity.ok(employee);
+			emp.setName(employee.getName());
+			emp.setRank(employee.getRank());
+			emp.setPayment(emp.getPayment());
+			emp.setEntrance(employee.getEntrance());
+			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}else {
 			return ResponseEntity.notFound().build();
 		}
@@ -60,21 +78,21 @@ public class HrEmployeeRestController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<EmployeeDto> deleteEmployee(@PathVariable long id) {
-		EmployeeDto employee=employeeRepo.getEmployee(id);
+		Employee employee=employeeService.getEmployee(id);
 		if (employee == null) {
 			return ResponseEntity.notFound().build();
 		}else {
-			employeeRepo.deleteEmployee(id);
-			return ResponseEntity.ok(employee);
+			employeeService.deleteEmployee(id);
+			return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
 		}
 	}
 	
 	@GetMapping("/paymentgreater/{payment}")
 	public List<EmployeeDto> getPaymentGreater(@PathVariable int payment) {
 		ArrayList<EmployeeDto> greaterEmployee=new ArrayList<>();
-		for (EmployeeDto e : employeeRepo.getEmployees()) {
+		for (Employee e : employeeService.getEmployees()) {
 			if (e.getPayment()>payment) {
-				greaterEmployee.add(e);
+				greaterEmployee.add(employeeMapper.employeeToDto(e));
 			}
 		}
 		return greaterEmployee;
