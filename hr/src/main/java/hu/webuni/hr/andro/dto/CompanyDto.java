@@ -3,7 +3,6 @@ package hu.webuni.hr.andro.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import com.fasterxml.jackson.annotation.JsonFilter;
 
 //@JsonFilter("CompanyFilterExcludeEmployees")
 public class CompanyDto {

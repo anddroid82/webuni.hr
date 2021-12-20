@@ -2,13 +2,11 @@ package hu.webuni.hr.andro.rest;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +21,11 @@ import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.service.EmployeeService;
+import hu.webuni.hr.andro.validation.EmployeeAdd;
 
 @RestController
 @RequestMapping("/api/employees")
 public class HrEmployeeRestController {
-
-	//@Autowired
-	//private EmployeeDtoRepository employeeService;
 	
 	@Autowired
 	EmployeeService employeeService;
@@ -53,17 +49,17 @@ public class HrEmployeeRestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid Employee employee, BindingResult bindingResult) {
+	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Validated(EmployeeAdd.class) EmployeeDto employee, BindingResult bindingResult) {
 		Employee emp = employeeService.getEmployee(employee.getId());
 		if (bindingResult.hasErrors() || emp!=null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
-		employeeService.addEmployee(employee);
-		return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
+		employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
+		return ResponseEntity.ok(employee);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody Employee employee) {
+	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody EmployeeDto employee) {
 		Employee emp = employeeService.getEmployee(id);
 		if (emp != null) {
 			emp.setName(employee.getName());

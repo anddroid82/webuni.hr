@@ -1,13 +1,9 @@
 package hu.webuni.hr.andro.rest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,14 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.CompanyMapper;
@@ -89,24 +78,23 @@ public class HrCompanyRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CompanyDto> createCompany(@RequestBody Company company) {
+	public ResponseEntity<CompanyDto> createCompany(@RequestBody CompanyDto company) {
 		Company c = companyService.getCompany(company.getId());
 		if (c == null) {
-			companyService.addCompany(company);
-			return ResponseEntity.ok(companyMapper.companyToCompanyDto(company));
+			Company cresult = companyService.addCompany(companyMapper.companyDtoToCompany(company));
+			return ResponseEntity.ok(companyMapper.companyToCompanyDto(cresult));
 		}else {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CompanyDto> modifyCompany(@PathVariable String id, @RequestBody Company company) {
+	public ResponseEntity<CompanyDto> modifyCompany(@PathVariable String id, @RequestBody CompanyDto company) {
 		Company comp = companyService.getCompany(id);
 		if (comp != null) {
-			//companyService.deleteCompany(comp);
 			comp.setName(company.getName());
 			comp.setAddress(company.getAddress());
-			return ResponseEntity.ok(companyMapper.companyToCompanyDto(company));
+			return ResponseEntity.ok(companyMapper.companyToCompanyDto(comp));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
@@ -124,14 +112,14 @@ public class HrCompanyRestController {
 	}
 	
 	@PostMapping("/{companyId}/addEmployee")
-	public ResponseEntity<EmployeeDto> addEmployeeToCompany(@RequestBody Employee employee,@PathVariable String companyId) {
+	public ResponseEntity<EmployeeDto> addEmployeeToCompany(@RequestBody EmployeeDto employee,@PathVariable String companyId) {
 		Employee emp = employeeService.getEmployee(employee.getId());
 		Company comp = companyService.getCompany(companyId);
 		if (emp == null) {
-			employeeService.addEmployee(employee);
+			Employee newEmp = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
 			//hozzáadjuk a company-hoz, ha volt ilyen
 			if (comp != null) {
-				return ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(employee)));
+				return ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(newEmp)));
 			}
 		}else {
 			return ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(emp))); 
@@ -150,15 +138,15 @@ public class HrCompanyRestController {
 	}
 	
 	@PostMapping("/{companyId}/changeEmployees")
-	public boolean changeEmployeeList(@RequestBody List<Employee> employees, @PathVariable String companyId) {
+	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable String companyId) {
 		Company company = this.companyService.getCompany(companyId);
 		if (company != null) {
 			company.removeAllEmployee();
-			for (Employee emp : employees) {
+			for (EmployeeDto emp : employees) {
 				Employee temp = employeeService.getEmployee(emp.getId());
 				if (temp == null) {
-					employeeService.addEmployee(emp);
-					temp=emp;
+					Employee empAdded = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(emp));
+					temp=empAdded;
 				}
 				company.addEmployee(temp);
 			}
