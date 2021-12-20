@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import hu.webuni.hr.andro.dto.EmployeeDto;
-import hu.webuni.hr.andro.service.EmployeeService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class HrEmployeeRestControllerIT {
@@ -18,47 +17,80 @@ public class HrEmployeeRestControllerIT {
 	
 	@Autowired
 	WebTestClient webTestClient;
-	
+
 	@Test
-	private void testCreateEmployee() throws Exception {
-		
+	void testCreateEmployeeSuccess() throws Exception {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
-		
-		EmployeeDto empDto = new EmployeeDto(112L, "Kovács Kázmér", "programozó", 450000, LocalDateTime.parse("2014-03-14T12:00:00"));
+
+		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
+				LocalDateTime.parse("2014-03-14T12:00:00"));
 		createEmployee(empDto);
-		
+
 		List<EmployeeDto> employeesAfter = getAllEmployees();
 		
-		assertThat(employeesAfter.subList(0, employeesAfter.size()))
+		assertThat(employeesAfter.subList(0, employeesBefore.size()))
+			.usingRecursiveFieldByFieldElementComparator()
 			.containsExactlyElementsOf(employeesBefore);
-		assertThat(employeesAfter.get(employeesAfter.size()-1))
+		assertThat(employeesAfter.get(employeesAfter.size() - 1))
+			.usingRecursiveComparison()
 			.isEqualTo(empDto);
+	}
+	
+	
+	@Test
+	void testCreateEmployeeFail() throws Exception {
+		List<EmployeeDto> employeesBefore = getAllEmployees();
+		//létező felhasználót akarunk hozzáadni
+		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
+				LocalDateTime.parse("2014-03-14T12:00:00"));
+		createEmployee(empDto);
+
+		List<EmployeeDto> employeesAfter = getAllEmployees();
 		
+		assertThat(employeesAfter)
+			.usingRecursiveFieldByFieldElementComparator()
+			.containsExactlyElementsOf(employeesBefore);		
+	}
+	
+	
+	@Test
+	void testModifyEmployeeSuccess() throws Exception {
+		EmployeeDto empDto = new EmployeeDto(111L, "Fehér Edit", "programozó", 450000,
+				LocalDateTime.parse("2014-03-14T12:00:00"));
+		modifyEmployee(empDto);
+
+		List<EmployeeDto> employeesAfter = getAllEmployees();
+		
+		assertThat(employeesAfter)
+			.contains(empDto)
+			.usingRecursiveFieldByFieldElementComparator();
+	}
+	
+	@Test
+	void testModifyEmployeeFail() throws Exception {
+		//nem létező felhasználót akarunk módosítani
+		EmployeeDto empDto = new EmployeeDto(118L, "Fehér Edit", "programozó", 450000,
+				LocalDateTime.parse("2014-03-14T12:00:00"));
+		modifyEmployee(empDto);
+
+		List<EmployeeDto> employeesAfter = getAllEmployees();
+		
+		assertThat(employeesAfter)
+			.contains(empDto)
+			.usingRecursiveFieldByFieldElementComparator();
+	}
+	
+	private void modifyEmployee(EmployeeDto empDto) {
+		webTestClient.put().uri(BASE_URI+"/"+empDto.getId()).bodyValue(empDto).exchange().expectStatus().isOk();
 	}
 
 	private void createEmployee(EmployeeDto empDto) {
-		webTestClient
-			.post()
-			.uri(BASE_URI)
-			.bodyValue(empDto)
-			.exchange()
-			.expectStatus()
-			.isOk();
-		
+		webTestClient.post().uri(BASE_URI).bodyValue(empDto).exchange().expectStatus().isOk();
 	}
 
 	private List<EmployeeDto> getAllEmployees() {
-		List<EmployeeDto> employees = webTestClient
-				.post()
-				.uri(BASE_URI)
-				.exchange()
-				.expectStatus()
-				.isOk()
-				.expectBodyList(EmployeeDto.class)
-				.returnResult()
-				.getResponseBody();
+		List<EmployeeDto> employees = webTestClient.get().uri(BASE_URI).exchange().expectStatus().isOk()
+				.expectBodyList(EmployeeDto.class).returnResult().getResponseBody();
 		return employees;
 	}
-	
-	
 }
