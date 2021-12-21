@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
+
 import hu.webuni.hr.andro.dto.EmployeeDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,17 +42,16 @@ public class HrEmployeeRestControllerIT {
 	
 	@Test
 	void testCreateEmployeeFail() throws Exception {
-		List<EmployeeDto> employeesBefore = getAllEmployees();
 		//létező felhasználót akarunk hozzáadni
+		List<EmployeeDto> employeesBefore = getAllEmployees();
 		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"));
-		createEmployee(empDto);
-
+		createEmployeeFail(empDto);
 		List<EmployeeDto> employeesAfter = getAllEmployees();
-		
 		assertThat(employeesAfter)
 			.usingRecursiveFieldByFieldElementComparator()
-			.containsExactlyElementsOf(employeesBefore);		
+			.containsExactlyElementsOf(employeesBefore);
+			
 	}
 	
 	
@@ -71,21 +73,29 @@ public class HrEmployeeRestControllerIT {
 		//nem létező felhasználót akarunk módosítani
 		EmployeeDto empDto = new EmployeeDto(118L, "Fehér Edit", "programozó", 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"));
-		modifyEmployee(empDto);
+		modifyEmployeeFail(empDto);
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();
 		
 		assertThat(employeesAfter)
-			.contains(empDto)
+			.doesNotContain(empDto)
 			.usingRecursiveFieldByFieldElementComparator();
 	}
 	
 	private void modifyEmployee(EmployeeDto empDto) {
 		webTestClient.put().uri(BASE_URI+"/"+empDto.getId()).bodyValue(empDto).exchange().expectStatus().isOk();
 	}
+	
+	private void modifyEmployeeFail(EmployeeDto empDto) {
+		webTestClient.put().uri(BASE_URI+"/"+empDto.getId()).bodyValue(empDto).exchange().expectStatus().isNotFound();
+	}
 
 	private void createEmployee(EmployeeDto empDto) {
 		webTestClient.post().uri(BASE_URI).bodyValue(empDto).exchange().expectStatus().isOk();
+	}
+	
+	private void createEmployeeFail(EmployeeDto empDto) {
+		webTestClient.post().uri(BASE_URI).bodyValue(empDto).exchange().expectStatus().isNotFound();
 	}
 
 	private List<EmployeeDto> getAllEmployees() {

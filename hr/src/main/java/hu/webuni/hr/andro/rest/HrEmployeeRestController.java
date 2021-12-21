@@ -51,7 +51,8 @@ public class HrEmployeeRestController {
 	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid EmployeeDto employee, BindingResult bindingResult) {
 		Employee emp = employeeService.getEmployee(employee.getId());
 		if (bindingResult.hasErrors() || emp!=null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			//throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 		employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
 		return ResponseEntity.ok(employee);
