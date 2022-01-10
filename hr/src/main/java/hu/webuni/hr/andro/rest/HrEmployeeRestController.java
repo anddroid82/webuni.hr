@@ -1,5 +1,6 @@
 package hu.webuni.hr.andro.rest;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -51,7 +52,6 @@ public class HrEmployeeRestController {
 	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid EmployeeDto employee, BindingResult bindingResult) {
 		Employee emp = employeeService.getEmployee(employee.getId());
 		if (bindingResult.hasErrors() || emp!=null) {
-			//throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			return ResponseEntity.notFound().build();
 		}
 		employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
@@ -62,10 +62,7 @@ public class HrEmployeeRestController {
 	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody EmployeeDto employee) {
 		Employee emp = employeeService.getEmployee(id);
 		if (emp != null) {
-			emp.setName(employee.getName());
-			emp.setRank(employee.getRank());
-			emp.setPayment(emp.getPayment());
-			emp.setEntrance(employee.getEntrance());
+			emp = employeeService.modifyEmployee(employeeMapper.employeeDtoToEmployee(employee));
 			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}else {
 			return ResponseEntity.notFound().build();
@@ -94,4 +91,18 @@ public class HrEmployeeRestController {
 		return greaterEmployee;
 	}
 	
+	@GetMapping("/rank/{rank}")
+	public List<Employee> getEmployeesByRank(@PathVariable String rank) {
+		return employeeService.getEmployeesByRank(rank);
+	}
+	
+	@GetMapping("/name/{part}")
+	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String part) {
+		return employeeService.getEmployeesByNameStartsWithIgnoreCase(part);
+	}
+	
+	@GetMapping("/entrance/{start}/{end}")
+	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable LocalDateTime start,@PathVariable LocalDateTime end) {
+		return employeeService.getEmployeesByEntranceBetween(start,end);
+	}
 }

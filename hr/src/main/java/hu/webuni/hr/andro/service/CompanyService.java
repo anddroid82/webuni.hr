@@ -34,7 +34,8 @@ public class CompanyService {
 	public CompanyService(@Autowired EmployeeService employeeService) {
 		this.employeeService = employeeService;
 		this.companies = new ArrayList<>();
-		this.setDefaultValues();
+		//TODO:
+		//this.setDefaultValues();
 	}
 
 	public Employee addEmployeeToCompany(Employee employee, String companyId) {

@@ -2,12 +2,23 @@ package hu.webuni.hr.andro.model;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import org.springframework.core.annotation.Order;
+
 import hu.webuni.hr.andro.validation.BeforeNow;
 
+@Entity
+@NamedQuery(name = "Employee.findAll",query = "select e from Employee e order by e.name")
 public class Employee {
-	
+	@Id
+	@GeneratedValue
 	private Long id;
 	@NotBlank
 	private String name;
@@ -17,6 +28,10 @@ public class Employee {
 	private int payment;
 	@BeforeNow //a @Past is jó lett volna, csak létre akartam hozni egy sajátot, hogy hogy működik
 	private LocalDateTime entrance;
+
+	public Employee() {
+		
+	}
 
 	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance) {
 		super();

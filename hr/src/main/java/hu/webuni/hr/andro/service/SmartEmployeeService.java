@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.config.SmartConfigurationProperties;
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service
 public class SmartEmployeeService extends EmployeeAbstractService implements EmployeeService {

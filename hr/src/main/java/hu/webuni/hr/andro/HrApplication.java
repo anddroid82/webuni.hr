@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.service.SalaryService;
 
 @SpringBootApplication

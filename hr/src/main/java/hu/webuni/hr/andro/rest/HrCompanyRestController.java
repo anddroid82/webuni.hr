@@ -22,7 +22,7 @@ import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.service.CompanyService;
 import hu.webuni.hr.andro.service.EmployeeService;
 
-@RestController
+//@RestController
 @RequestMapping("/api/companies")
 public class HrCompanyRestController {
 

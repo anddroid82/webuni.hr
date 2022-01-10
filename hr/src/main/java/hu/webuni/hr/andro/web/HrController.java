@@ -92,6 +92,8 @@ public class HrController {
 			empFromServ.setRank(employee.getRank());
 			empFromServ.setPayment(employee.getPayment());
 			empFromServ.setEntrance(employee.getEntrance());
+			employeeService.modifyEmployee(empFromServ);
+			
 			return "redirect:list";
 		}
 	}
