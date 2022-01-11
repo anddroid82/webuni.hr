@@ -15,7 +15,6 @@ import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.CompanyRepository;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
-import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.service.SalaryService;
 
 @SpringBootApplication

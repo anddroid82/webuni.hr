@@ -2,6 +2,7 @@ package hu.webuni.hr.andro.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.CompanyMapper;
@@ -109,7 +111,7 @@ public class HrCompanyRestController {
 		Employee emp = employeeService.getEmployee(employee.getId());
 		Company comp = companyService.getCompany(companyId);
 		if (emp == null) {
-			Employee newEmp = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
+			//Employee newEmp = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
 			// hozzáadjuk a company-hoz, ha volt ilyen
 			if (comp != null) {
 				// return

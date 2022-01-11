@@ -1,17 +1,14 @@
 package hu.webuni.hr.andro.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import hu.webuni.hr.andro.model.Company;
-import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.CompanyRepository;
-import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service
 public class CompanyService {
