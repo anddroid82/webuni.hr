@@ -3,15 +3,16 @@ package hu.webuni.hr.andro.model;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.core.annotation.Order;
-
 import hu.webuni.hr.andro.validation.BeforeNow;
 
 @Entity
@@ -28,7 +29,11 @@ public class Employee {
 	private int payment;
 	@BeforeNow //a @Past is jó lett volna, csak létre akartam hozni egy sajátot, hogy hogy működik
 	private LocalDateTime entrance;
-
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
+	private Company company;
+	
 	public Employee() {
 		
 	}
@@ -40,6 +45,15 @@ public class Employee {
 		this.rank = rank;
 		this.payment = payment;
 		this.entrance = entrance;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		company.addEmployee(this);
+		this.company = company;
 	}
 
 	public Long getId() {

@@ -17,7 +17,7 @@ public class CompanyDtoRepository {
 	private List<CompanyDto> companies;
 	
 	public void setDefaultValues() {
-		CompanyDto c1=new CompanyDto("abc001", "Teszt Cég 01", "Teszt Cím 01");
+		/*CompanyDto c1=new CompanyDto("abc001", "Teszt Cég 01", "Teszt Cím 01");
 		c1.addEmployee(employeeRepo.getEmployee(111L));
 		c1.addEmployee(employeeRepo.getEmployee(222L));
 		companies.add(c1);
@@ -28,7 +28,7 @@ public class CompanyDtoRepository {
 		CompanyDto c3=new CompanyDto("abc003", "Teszt Cég 03", "Teszt Cím 03");
 		c3.addEmployee(employeeRepo.getEmployee(555L));
 		c3.addEmployee(employeeRepo.getEmployee(666L));
-		companies.add(c3);
+		companies.add(c3);*/
 	}
 	
 	
@@ -65,6 +65,7 @@ public class CompanyDtoRepository {
 		return false;
 	}
 	
+	/*
 	public CompanyDto addCompany(CompanyDto company) {
 		CompanyDto comp = this.getCompany(company.getId());
 		if (comp == null) {
@@ -73,6 +74,7 @@ public class CompanyDtoRepository {
 		}
 		return null;
 	}
+	*/
 
 	public CompanyDto getCompany(String id) {
 		for (CompanyDto c : companies) {

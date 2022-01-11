@@ -7,13 +7,13 @@ import java.util.ListIterator;
 //@JsonFilter("CompanyFilterExcludeEmployees")
 public class CompanyDto {
 
-	private String id;
+	private Long id;
 	private String name;
 	private String address;
 	
 	private List<EmployeeDto> employees;
 
-	public CompanyDto(String id, String name, String address) {
+	public CompanyDto(Long id, String name, String address) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -58,11 +58,11 @@ public class CompanyDto {
 		}
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

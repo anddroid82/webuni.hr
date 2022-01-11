@@ -4,26 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Company {
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
-	private String id;
+@Entity
+public class Company {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String name;
 	private String address;
 	
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
 	private List<Employee> employees;
 
-	public Company(String id, String name, String address) {
+	public Company() {
+	}
+	
+	public Company(Long id, String name, String address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.employees = new ArrayList<>();
 	}
-
+	
 	public Employee addEmployee(Employee employee) {
 		Employee emp = this.getEmployee(employee.getId());
 		if (emp == null) {
-			//employee.setCompany(this);
 			this.employees.add(employee);
 			return employee;
 		}
@@ -38,6 +51,7 @@ public class Company {
 		return null;
 	}
 
+	
 	public Employee removeEmployee(long id) {
 		Employee emp = this.getEmployee(id);
 		if (emp != null) {
@@ -48,20 +62,21 @@ public class Company {
 		return null;
 	}
 	
-	public void removeAllEmployee() {
+	/*public void removeAllEmployee() {
 		ListIterator<Employee> iterator = this.employees.listIterator();
 		while (iterator.hasNext()) {
 			//Employee emp = iterator.next();
 			//emp.setCompany(null);
 			iterator.remove();
 		}
-	}
+	}*/
+	
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

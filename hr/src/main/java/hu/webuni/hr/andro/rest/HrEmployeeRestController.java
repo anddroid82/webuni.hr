@@ -50,8 +50,7 @@ public class HrEmployeeRestController {
 	
 	@PostMapping
 	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid EmployeeDto employee, BindingResult bindingResult) {
-		Employee emp = employeeService.getEmployee(employee.getId());
-		if (bindingResult.hasErrors() || emp!=null) {
+		if (bindingResult.hasErrors()) {
 			return ResponseEntity.notFound().build();
 		}
 		employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
@@ -60,9 +59,8 @@ public class HrEmployeeRestController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody EmployeeDto employee) {
-		Employee emp = employeeService.getEmployee(id);
+		Employee emp = employeeService.modifyEmployee(employeeMapper.employeeDtoToEmployee(employee));
 		if (emp != null) {
-			emp = employeeService.modifyEmployee(employeeMapper.employeeDtoToEmployee(employee));
 			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}else {
 			return ResponseEntity.notFound().build();
@@ -71,24 +69,17 @@ public class HrEmployeeRestController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<EmployeeDto> deleteEmployee(@PathVariable long id) {
-		Employee employee=employeeService.getEmployee(id);
+		Employee employee=employeeService.deleteEmployee(id);
 		if (employee == null) {
 			return ResponseEntity.notFound().build();
 		}else {
-			employeeService.deleteEmployee(id);
 			return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
 		}
 	}
 	
 	@GetMapping("/paymentgreater/{payment}")
 	public List<EmployeeDto> getPaymentGreater(@PathVariable int payment) {
-		ArrayList<EmployeeDto> greaterEmployee=new ArrayList<>();
-		for (Employee e : employeeService.getEmployees()) {
-			if (e.getPayment()>payment) {
-				greaterEmployee.add(employeeMapper.employeeToDto(e));
-			}
-		}
-		return greaterEmployee;
+		return employeeMapper.employeesToDtos(employeeService.getEmployeesByPaymentGreaterThan(payment));
 	}
 	
 	@GetMapping("/rank/{rank}")
@@ -96,13 +87,15 @@ public class HrEmployeeRestController {
 		return employeeService.getEmployeesByRank(rank);
 	}
 	
-	@GetMapping("/name/{part}")
+	@GetMapping("/namestart/{part}")
 	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String part) {
 		return employeeService.getEmployeesByNameStartsWithIgnoreCase(part);
 	}
 	
 	@GetMapping("/entrance/{start}/{end}")
-	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable LocalDateTime start,@PathVariable LocalDateTime end) {
-		return employeeService.getEmployeesByEntranceBetween(start,end);
+	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String start,@PathVariable String end) {
+		LocalDateTime startDT=LocalDateTime.parse(start);
+		LocalDateTime endDT=LocalDateTime.parse(end);
+		return employeeService.getEmployeesByEntranceBetween(startDT,endDT);
 	}
 }

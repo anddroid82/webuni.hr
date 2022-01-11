@@ -17,7 +17,8 @@
     <p class="card-subtitle"><input placeholder="rank" th:field="*{rank}" class="form-control"></p>
   </div>
   <ul class="list-group list-group-flush">
-  	<li class="list-group-item"><label class="form-label">Id: </label><input th:field="*{id}" class="form-control" th:readonly="${type == 'modify'}"></li>
+  	<!-- <li class="list-group-item"><label class="form-label">Id: </label><input th:field="*{id}" class="form-control" th:readonly="${type == 'modify'}"></li> -->
+  	<input type="hidden" th:field="*{id}" />
     <li class="list-group-item"><label class="form-label">Payment: </label><input th:field="*{payment}" class="form-control"></li>
     <li class="list-group-item"><label class="form-label">Entrance: </label><input type="text" th:field="*{entrance}" id="entrance" class="form-control"></li>
   </ul>

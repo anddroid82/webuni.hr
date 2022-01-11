@@ -17,6 +17,8 @@ public interface EmployeeService {
 	List<Employee> getEmployees();
 	//void setEmployees(List<Employee> employees);
 	
+	public List<Employee> getEmployeesByPaymentGreaterThan(int payment);
+	
 	public List<Employee> getEmployeesByRank(String rank);
 	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(String name);
 	public List<Employee> getEmployeesByEntranceBetween(LocalDateTime start,LocalDateTime end);

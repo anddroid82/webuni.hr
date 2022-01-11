@@ -128,7 +128,7 @@ public class HrController {
 	}
 	
 	@GetMapping("/company/{id}/details")
-	public String getCompanyData(@PathVariable String id, Map<String, Object> model) {
+	public String getCompanyData(@PathVariable Long id, Map<String, Object> model) {
 		CompanyDto companyDto = companyMapper.companyToCompanyDto(companyService.getCompany(id));
 		model.put("company", companyDto);
 		model.put("employees", companyDto.getEmployees());
@@ -137,14 +137,14 @@ public class HrController {
 	}
 
 	@GetMapping("/company/{companyId}/employeedelete/{employeeId}")
-	public String deleteEmployeeFromCompany(@PathVariable String companyId, @PathVariable long employeeId,
+	public String deleteEmployeeFromCompany(@PathVariable Long companyId, @PathVariable long employeeId,
 			Map<String, Object> model) {
 		Company company = companyService.getCompany(companyId);
 		if (company == null) {
 			return "redirect:/error";
 		}
 		model.put("company", companyMapper.companyToCompanyDto(company));
-		model.put("employees", employeeMapper.employeesToDtos(company.getEmployees()));
+		//model.put("employees", employeeMapper.employeesToDtos(company.getEmployees()));
 		model.put("referer", "companydetails");
 		return "company/details";
 	}
