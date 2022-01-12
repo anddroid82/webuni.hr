@@ -3,6 +3,7 @@ package hu.webuni.hr.andro.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,15 @@ import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service
-public abstract class EmployeeAbstractService {
+public abstract class EmployeeAbstractService implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@PostConstruct
+	public void postConstruct() {
+		System.out.println("postconstruct");
+	}
 	
 	//kerdes: a Transactional-t pontosan hol kell használni? ha metódus hív másikat, és az változtat, akkor a hívó is rá lehet rakni? 
 	@Transactional

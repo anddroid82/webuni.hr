@@ -30,7 +30,6 @@ public class CompanyService {
 				emp = employeeService.addEmployee(employee);
 			}
 			emp = company.addEmployee(emp);
-			companyRepository.save(company);
 			return employeeService.modifyEmployee(emp);
 		}
 		return null;
@@ -42,7 +41,6 @@ public class CompanyService {
 		if (company != null) {
 			Employee employee = company.removeEmployee(employeeId);
 			if (employee != null) {
-				companyRepository.save(company);
 				employeeService.modifyEmployee(employee);
 			}
 			return employee;
