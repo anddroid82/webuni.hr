@@ -2,7 +2,6 @@ package hu.webuni.hr.andro.rest;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.CompanyMapper;
@@ -108,18 +106,9 @@ public class HrCompanyRestController {
 	@PostMapping("/{companyId}/addEmployee")
 	public ResponseEntity<EmployeeDto> addEmployeeToCompany(@RequestBody EmployeeDto employee,
 			@PathVariable Long companyId) {
-		Employee emp = employeeService.getEmployee(employee.getId());
-		Company comp = companyService.getCompany(companyId);
+		Employee emp = companyService.addEmployeeToCompany(employeeMapper.dtoToEmployee(employee), companyId);
 		if (emp == null) {
-			//Employee newEmp = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
-			// hozzáadjuk a company-hoz, ha volt ilyen
-			if (comp != null) {
-				// return
-				// ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(newEmp)));
-			}
-		} else {
-			// return
-			// ResponseEntity.ok(employeeMapper.employeeToDto(comp.addEmployee(emp)));
+			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -127,15 +116,14 @@ public class HrCompanyRestController {
 	@GetMapping("/{companyId}/deleteEmployee/{employeeId}")
 	public ResponseEntity<EmployeeDto> deleteEmployeeFromCompany(@PathVariable Long companyId,
 			@PathVariable long employeeId) {
-		Company comp = companyService.getCompany(companyId);
-		if (comp != null) {
-			// TODO: Employee emp = comp.removeEmployee(employeeId);
-			Employee emp = null;
-			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
+		Employee employee = companyService.deleteEmployeeFromCompany(employeeId, companyId);
+		if (employee != null) {
+			return ResponseEntity.ok(employeeMapper.employeeToDto(employee));
 		}
 		return ResponseEntity.notFound().build();
 	}
 
+	/* TODO: még nem volt idő átírni
 	@PostMapping("/{companyId}/changeEmployees")
 	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable Long companyId) {
 		Company company = this.companyService.getCompany(companyId);
@@ -145,7 +133,7 @@ public class HrCompanyRestController {
 			for (EmployeeDto emp : employees) {
 				Employee temp = employeeService.getEmployee(emp.getId());
 				if (temp == null) {
-					Employee empAdded = employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(emp));
+					Employee empAdded = employeeService.addEmployee(employeeMapper.dtoToEmployee(emp));
 					temp = empAdded;
 				}
 				// TODO: company.addEmployee(temp);
@@ -154,5 +142,5 @@ public class HrCompanyRestController {
 		}
 		return false;
 	}
-
+	*/
 }

@@ -2,9 +2,13 @@ package hu.webuni.hr.andro.dto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import hu.webuni.hr.andro.validation.BeforeNow;
 import hu.webuni.hr.andro.validation.EmployeeAdd;
 import hu.webuni.hr.andro.validation.Unique;
@@ -23,24 +27,18 @@ public class EmployeeDto {
 	private LocalDateTime entrance;
 	
 	//@JsonBackReference
-	//private CompanyDto company;
+	private CompanyDto company;
 	
-	public EmployeeDto(Long id, String name, String rank, int payment, LocalDateTime entrance) {
+	public EmployeeDto(Long id, String name, String rank, int payment, LocalDateTime entrance, CompanyDto company) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.rank = rank;
 		this.payment = payment;
 		this.entrance = entrance;
+		this.company=company;
 	}
-	/*
-	public CompanyDto getCompany() {
-		return company;
-	}
-	public void setCompany(CompanyDto company) {
-		this.company = company;
-	}
-	*/
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,6 +70,12 @@ public class EmployeeDto {
 		this.entrance = entrance;
 	}
 	
+	public CompanyDto getCompany() {
+		return company;
+	}
+	public void setCompany(CompanyDto company) {
+		this.company = company;
+	}
 	@JsonIgnore
 	public long getMonthsFromEntrance() {
 		LocalDateTime to=LocalDateTime.now();

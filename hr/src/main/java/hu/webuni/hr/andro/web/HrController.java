@@ -59,7 +59,7 @@ public class HrController {
 
 	@GetMapping("add")
 	public String addEmployee(Map<String, Object> model) {
-		model.put("employee", new EmployeeDto(0L, "", "", 0, null));
+		model.put("employee", new EmployeeDto(0L, "", "", 0, null,null));
 		model.put("type", "add");
 		return "modify";
 	}
@@ -73,7 +73,7 @@ public class HrController {
 			model.put("errors", bindingresult.getFieldErrors());
 			return "modify";
 		} else {
-			employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
+			employeeService.addEmployee(employeeMapper.dtoToEmployee(employee));
 			return "redirect:list";
 		}
 	}
@@ -137,14 +137,15 @@ public class HrController {
 	}
 
 	@GetMapping("/company/{companyId}/employeedelete/{employeeId}")
-	public String deleteEmployeeFromCompany(@PathVariable Long companyId, @PathVariable long employeeId,
+	public String deleteEmployeeFromCompany(@PathVariable long companyId, @PathVariable long employeeId,
 			Map<String, Object> model) {
 		Company company = companyService.getCompany(companyId);
 		if (company == null) {
 			return "redirect:/error";
 		}
 		model.put("company", companyMapper.companyToCompanyDto(company));
-		//model.put("employees", employeeMapper.employeesToDtos(company.getEmployees()));
+		companyService.deleteEmployeeFromCompany(employeeId, companyId);
+		model.put("employees", employeeMapper.employeesToDtos(company.getEmployees()));
 		model.put("referer", "companydetails");
 		return "company/details";
 	}

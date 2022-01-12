@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.transaction.Transactional;
 
 @Entity
 public class Company {
@@ -31,11 +32,13 @@ public class Company {
 		this.address = address;
 		this.employees = new ArrayList<>();
 	}
+
 	
 	public Employee addEmployee(Employee employee) {
 		Employee emp = this.getEmployee(employee.getId());
 		if (emp == null) {
 			this.employees.add(employee);
+			employee.setCompany(this);
 			return employee;
 		}
 		return null;
@@ -53,7 +56,7 @@ public class Company {
 	public Employee removeEmployee(long id) {
 		Employee emp = this.getEmployee(id);
 		if (emp != null) {
-			//emp.setCompany(null);
+			emp.setCompany(null);
 			this.employees.remove(emp);
 			return emp;
 		}

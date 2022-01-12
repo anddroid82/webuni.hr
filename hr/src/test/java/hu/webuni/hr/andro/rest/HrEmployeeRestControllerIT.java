@@ -26,7 +26,7 @@ public class HrEmployeeRestControllerIT {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 
 		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
-				LocalDateTime.parse("2014-03-14T12:00:00"));
+				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		createEmployee(empDto);
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();
@@ -45,7 +45,7 @@ public class HrEmployeeRestControllerIT {
 		//létező felhasználót akarunk hozzáadni
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
-				LocalDateTime.parse("2014-03-14T12:00:00"));
+				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		createEmployeeFail(empDto);
 		List<EmployeeDto> employeesAfter = getAllEmployees();
 		assertThat(employeesAfter)
@@ -58,7 +58,7 @@ public class HrEmployeeRestControllerIT {
 	@Test
 	void testModifyEmployeeSuccess() throws Exception {
 		EmployeeDto empDto = new EmployeeDto(111L, "Fehér Edit", "programozó", 450000,
-				LocalDateTime.parse("2014-03-14T12:00:00"));
+				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		modifyEmployee(empDto);
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();
@@ -72,7 +72,7 @@ public class HrEmployeeRestControllerIT {
 	void testModifyEmployeeFail() throws Exception {
 		//nem létező felhasználót akarunk módosítani
 		EmployeeDto empDto = new EmployeeDto(118L, "Fehér Edit", "programozó", 450000,
-				LocalDateTime.parse("2014-03-14T12:00:00"));
+				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		modifyEmployeeFail(empDto);
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();

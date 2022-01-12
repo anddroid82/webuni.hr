@@ -1,6 +1,7 @@
 package hu.webuni.hr.andro.rest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.model.Employee;
@@ -52,13 +52,13 @@ public class HrEmployeeRestController {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.notFound().build();
 		}
-		employeeService.addEmployee(employeeMapper.employeeDtoToEmployee(employee));
+		employeeService.addEmployee(employeeMapper.dtoToEmployee(employee));
 		return ResponseEntity.ok(employee);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id,@RequestBody EmployeeDto employee) {
-		Employee emp = employeeService.modifyEmployee(employeeMapper.employeeDtoToEmployee(employee));
+		Employee emp = employeeService.modifyEmployee(employeeMapper.dtoToEmployee(employee));
 		if (emp != null) {
 			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}else {
@@ -82,19 +82,19 @@ public class HrEmployeeRestController {
 	}
 	
 	@GetMapping("/rank/{rank}")
-	public List<Employee> getEmployeesByRank(@PathVariable String rank) {
-		return employeeService.getEmployeesByRank(rank);
+	public List<EmployeeDto> getEmployeesByRank(@PathVariable String rank) {
+		return employeeMapper.employeesToDtos(employeeService.getEmployeesByRank(rank));
 	}
 	
 	@GetMapping("/namestart/{part}")
-	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String part) {
-		return employeeService.getEmployeesByNameStartsWithIgnoreCase(part);
+	public List<EmployeeDto> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String part) {
+		return employeeMapper.employeesToDtos(employeeService.getEmployeesByNameStartsWithIgnoreCase(part));
 	}
 	
 	@GetMapping("/entrance/{start}/{end}")
-	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String start,@PathVariable String end) {
+	public List<EmployeeDto> getEmployeesByNameStartsWithIgnoreCase(@PathVariable String start,@PathVariable String end) {
 		LocalDateTime startDT=LocalDateTime.parse(start);
 		LocalDateTime endDT=LocalDateTime.parse(end);
-		return employeeService.getEmployeesByEntranceBetween(startDT,endDT);
+		return employeeMapper.employeesToDtos(employeeService.getEmployeesByEntranceBetween(startDT,endDT));
 	}
 }

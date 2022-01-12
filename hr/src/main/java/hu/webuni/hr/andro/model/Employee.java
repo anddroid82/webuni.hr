@@ -38,13 +38,14 @@ public class Employee {
 		
 	}
 
-	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance) {
+	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance, Company company) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.rank = rank;
 		this.payment = payment;
 		this.entrance = entrance;
+		this.company = company;
 	}
 
 	public Company getCompany() {
@@ -52,7 +53,6 @@ public class Employee {
 	}
 
 	public void setCompany(Company company) {
-		company.addEmployee(this);
 		this.company = company;
 	}
 

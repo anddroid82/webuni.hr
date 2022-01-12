@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.model.Company;
+import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.CompanyRepository;
+import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service
 public class CompanyService {
@@ -18,33 +20,45 @@ public class CompanyService {
 	
 	@Autowired
 	CompanyRepository companyRepository;
-
-	/*
-	public Employee addEmployeeToCompany(Employee employee, String companyId) {
+	
+	@Transactional
+	public Employee addEmployeeToCompany(Employee employee, long companyId) {
 		Company company = this.getCompany(companyId);
 		if (company != null) {
-			company.addEmployee(employee);
-			return employee;
+			Employee emp = employeeService.getEmployee(employee.getId());
+			if (emp == null) {
+				emp = employeeService.addEmployee(employee);
+			}
+			emp = company.addEmployee(emp);
+			companyRepository.save(company);
+			return employeeService.modifyEmployee(emp);
 		}
 		return null;
 	}
-	public Employee deleteEmployeeFromCompany(long employeeId,String companyId) {
+	
+	@Transactional
+	public Employee deleteEmployeeFromCompany(long employeeId,long companyId) {
 		Company company = this.getCompany(companyId);
 		if (company != null) {
 			Employee employee = company.removeEmployee(employeeId);
+			if (employee != null) {
+				companyRepository.save(company);
+				employeeService.modifyEmployee(employee);
+			}
 			return employee;
 		}
 		return null;
 	}
-	public boolean changeEmployeeListOfCompany(List<Employee> employees, String companyId) {
+	
+	/*public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
 		Company company = this.getCompany(companyId);
 		if (company != null) {
 			company.setEmployees(employees);
 			return true;
 		}
 		return false;
-	}
-	*/
+	}*/
+	
 	
 	@Transactional
 	public Company addCompany(Company company) {
