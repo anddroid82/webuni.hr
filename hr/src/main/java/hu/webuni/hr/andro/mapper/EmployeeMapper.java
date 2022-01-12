@@ -13,22 +13,26 @@ import hu.webuni.hr.andro.model.Employee;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
-	
+
 	List<EmployeeDto> employeesToDtos(List<Employee> employees);
-	
-	@Mapping(source = "company",target = "company",qualifiedByName = "companyToDto")
+
+	@Mapping(source = "company", target = "company", qualifiedByName = "companyToDto")
 	EmployeeDto employeeToDto(Employee employee);
-	
-	@Mapping(source = "company",target = "company",qualifiedByName = "dtoToCompany")
+
+	@Mapping(source = "company", target = "company", qualifiedByName = "dtoToCompany")
 	Employee dtoToEmployee(EmployeeDto employeeDto);
-	
+
 	@Named("companyToDto")
-	public static CompanyDto companyToDto(Company company) { 
-        return new CompanyDto(company.getId(), company.getName(), company.getAddress());
-    }
-	
+	public static CompanyDto companyToDto(Company company) {
+		if (company == null)
+			return null;
+		return new CompanyDto(company.getId(), company.getName(), company.getAddress());
+	}
+
 	@Named("dtoToCompany")
-	public static Company companyToDto(CompanyDto company) { 
-        return new Company(company.getId(), company.getName(), company.getAddress());
-    }
+	public static Company companyToDto(CompanyDto company) {
+		if (company == null)
+			return null;
+		return new Company(company.getId(), company.getName(), company.getAddress());
+	}
 }
