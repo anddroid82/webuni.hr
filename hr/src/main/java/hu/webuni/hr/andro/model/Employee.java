@@ -34,8 +34,7 @@ public class Employee {
 	@JoinColumn(name = "company_id")
 	private Company company;
 	
-	public Employee() {
-		
+	public Employee() {	
 	}
 
 	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance, Company company) {
@@ -116,3 +115,4 @@ public class Employee {
 	}
 
 }
+

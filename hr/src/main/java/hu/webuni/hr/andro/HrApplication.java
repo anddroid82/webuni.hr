@@ -105,3 +105,19 @@ public class HrApplication implements CommandLineRunner {
 	}
 
 }
+
+/**
+ * 
+ * - konstruktorrral történő injektálásnál nem kell autowired? talán a CompanyController-ben volt Gábornál
+- az AbstractEmployeeService-ben a postconstruct 3-szor fut le, miért?
+- mikor kell paraméter nélküli default konstruktor? entity esetén kell-e mindig?
+- a transactional-t hogyan kell használni? közvetlenül ott kell-e használni ahol a repository-s módosító hívás van, vagy ha közvetve hívódik egy metódus és az módosít, 
+    akkor a hívóban elég?
+- pgsql-ben a truncate nem reset-eli az id értékét, mi a mgeoldás?
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
