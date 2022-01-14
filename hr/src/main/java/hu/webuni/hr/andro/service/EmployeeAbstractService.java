@@ -63,9 +63,9 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		return employeeRepository.findAll();
 	}
 
-	public void setEmployees(List<Employee> employees) {
-		// this.employees = employees;
-	}
+//	public void setEmployees(List<Employee> employees) {
+//		//this.employees = employees;
+//	}
 
 	public List<Employee> getEmployeesByRank(String rank) {
 		return employeeRepository.findByRank(rank);

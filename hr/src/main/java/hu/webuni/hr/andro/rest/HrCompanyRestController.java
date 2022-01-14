@@ -123,6 +123,21 @@ public class HrCompanyRestController {
 		return ResponseEntity.notFound().build();
 	}
 
+	@GetMapping("/emppaymentgreater/{payment}")
+	public ResponseEntity<List<CompanyDto>> findByEmployeePaymentGreaterThan(@PathVariable int payment) {
+		return ResponseEntity.ok(companyMapper.companiesToCompanyDtos(companyService.findByEmployeePaymentGreaterThan(payment)));
+	}
+	
+	@GetMapping("/empcountgreater/{count}")
+	public ResponseEntity<List<CompanyDto>> findByEmployeeCountGreaterThan(@PathVariable long count) {
+		return ResponseEntity.ok(companyMapper.companiesToCompanyDtos(companyService.findByEmployeeCountGreaterThan(count)));
+	}
+	
+	@GetMapping("/avgpayment/{companyId}")
+	public ResponseEntity<List<Object[]>> getAvgPaymentByRankOfCompany(@PathVariable long companyId) {
+		return ResponseEntity.ok(companyService.getAvgPaymentByRankOfCompany(companyId));
+	}
+	
 	/* TODO: még nem volt idő átírni
 	@PostMapping("/{companyId}/changeEmployees")
 	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable Long companyId) {

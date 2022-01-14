@@ -2,13 +2,13 @@ package hu.webuni.hr.andro.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.transaction.Transactional;
 
 @Entity
 public class Company {
@@ -63,15 +63,16 @@ public class Company {
 		return null;
 	}
 	
-	/*public void removeAllEmployee() {
+	/*
+	public void removeAllEmployee() {
 		ListIterator<Employee> iterator = this.employees.listIterator();
 		while (iterator.hasNext()) {
-			//Employee emp = iterator.next();
-			//emp.setCompany(null);
+			Employee emp = iterator.next();
+			emp.setCompany(null);
 			iterator.remove();
 		}
-	}*/
-	
+	}
+	*/
 
 	public Long getId() {
 		return id;

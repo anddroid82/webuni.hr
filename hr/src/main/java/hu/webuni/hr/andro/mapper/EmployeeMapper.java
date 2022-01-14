@@ -2,10 +2,10 @@ package hu.webuni.hr.andro.mapper;
 
 import java.util.List;
 
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.model.Company;

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.CompanyRepository;
-import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service
 public class CompanyService {
@@ -29,6 +28,7 @@ public class CompanyService {
 			if (emp == null) {
 				emp = employeeService.addEmployee(employee);
 			}
+			//TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ? 
 			emp = company.addEmployee(emp);
 			return employeeService.modifyEmployee(emp);
 		}
@@ -46,6 +46,18 @@ public class CompanyService {
 			return employee;
 		}
 		return null;
+	}
+	
+	public List<Company> findByEmployeePaymentGreaterThan(int payment) {
+		return companyRepository.findByEmployeePaymentGreaterThan(payment);
+	}
+	
+	public List<Company> findByEmployeeCountGreaterThan(long count) {
+		return companyRepository.findByEmployeeCountGreaterThan(count);
+	}
+	
+	public List<Object[]> getAvgPaymentByRankOfCompany(long companyId) {
+		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId));
 	}
 	
 	/*public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
@@ -97,5 +109,7 @@ public class CompanyService {
 		return companyRepository.findAll();
 	}
 
+	
+	
 	
 }
