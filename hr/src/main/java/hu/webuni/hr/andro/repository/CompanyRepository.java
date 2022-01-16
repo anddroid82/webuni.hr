@@ -15,7 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 	@Query("select c1 from Company c1 where c1.id in (select e.company from Employee e group by e.company having count(e.company)>:ct)")
 	List<Company> findByEmployeeCountGreaterThan(long ct);
 	
-	@Query("select new hu.webuni.hr.andro.repository.AvgPaymentOfCompany(avg(e.payment), e.position.name) from Employee e group by e.company, e.position.name having e.company=:c order by avg(e.payment) desc")
+	@Query("select new hu.webuni.hr.andro.repository.AvgPaymentOfCompany(avg(e.payment), e.position) from Employee e group by e.company, e.position having e.company=:c order by avg(e.payment) desc")
 	List<AvgPaymentOfCompany> getAvgPaymentByRankOfCompany(Company c);
 	
 	/*@Query(value = "select id,name from companytype",nativeQuery = true)

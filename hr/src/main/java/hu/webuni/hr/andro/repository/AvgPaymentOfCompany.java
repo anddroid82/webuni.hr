@@ -1,11 +1,13 @@
 package hu.webuni.hr.andro.repository;
 
+import hu.webuni.hr.andro.model.Position;
+
 public class AvgPaymentOfCompany {
 	private Double payment;
-	private String rank;
-	public AvgPaymentOfCompany(Double payment, String rank) {
+	private Position position;
+	public AvgPaymentOfCompany(Double payment, Position position) {
 		this.payment = payment;
-		this.rank = rank;
+		this.position = position;
 	}
 	public Double getPayment() {
 		return payment;
@@ -13,10 +15,10 @@ public class AvgPaymentOfCompany {
 	public void setPayment(Double payment) {
 		this.payment = payment;
 	}
-	public String getRank() {
-		return rank;
+	public Position getPosition() {
+		return position;
 	}
-	public void setRank(String rank) {
-		this.rank = rank;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 }
