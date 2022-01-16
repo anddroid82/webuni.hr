@@ -1,12 +1,17 @@
 package hu.webuni.hr.andro.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.model.Employee;
@@ -17,13 +22,14 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@PostConstruct
 	public void postConstruct() {
 		System.out.println("postconstruct");
 	}
-	
-	//kerdes: a Transactional-t pontosan hol kell használni? ha metódus hív másikat, és az változtat, akkor a hívó is rá lehet rakni? 
+
+	// kerdes: a Transactional-t pontosan hol kell használni? ha metódus hív
+	// másikat, és az változtat, akkor a hívó is rá lehet rakni?
 	@Transactional
 	public Employee addEmployee(Employee employee) {
 		employee.setId(null);
@@ -63,12 +69,27 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		return employeeRepository.findAll();
 	}
 
+	public List<Employee> getEmployees(Integer pageNo, Integer pageSize, String sortBy) {
+		if (pageNo == -1 || pageSize == -1) {
+			Sort sort = Sort.by(sortBy);
+			return employeeRepository.findAll(sort);
+		}else {
+			Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+			Page<Employee> page = employeeRepository.findAll(pageable);
+			if (page.hasContent()) {
+				return page.getContent();
+			}
+		}
+		
+		return new ArrayList<Employee>();
+	}
+
 //	public void setEmployees(List<Employee> employees) {
 //		//this.employees = employees;
 //	}
 
 	public List<Employee> getEmployeesByRank(String rank) {
-		return employeeRepository.findByRank(rank);
+		return employeeRepository.findByPosition_Name(rank);
 	}
 
 	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(String name) {
@@ -78,7 +99,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 	public List<Employee> getEmployeesByEntranceBetween(LocalDateTime start, LocalDateTime end) {
 		return employeeRepository.findByEntranceBetween(start, end);
 	}
-	
+
 	public List<Employee> getEmployeesByPaymentGreaterThan(int payment) {
 		return employeeRepository.findByPaymentGreaterThan(payment);
 	}

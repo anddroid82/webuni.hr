@@ -15,6 +15,7 @@ public interface EmployeeService {
 	Employee deleteEmployee(Employee emp);
 	Employee deleteEmployee(long id);
 	List<Employee> getEmployees();
+	List<Employee> getEmployees(Integer pageNo, Integer pageSize, String sortBy);
 	//void setEmployees(List<Employee> employees);
 	
 	public List<Employee> getEmployeesByPaymentGreaterThan(int payment);

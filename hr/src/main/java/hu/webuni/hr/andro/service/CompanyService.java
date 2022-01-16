@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.repository.AvgPaymentOfCompany;
 import hu.webuni.hr.andro.repository.CompanyRepository;
 
 @Service
@@ -56,7 +57,7 @@ public class CompanyService {
 		return companyRepository.findByEmployeeCountGreaterThan(count);
 	}
 	
-	public List<Object[]> getAvgPaymentByRankOfCompany(long companyId) {
+	public List<AvgPaymentOfCompany> getAvgPaymentByRankOfCompany(long companyId) {
 		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId));
 	}
 	

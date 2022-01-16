@@ -9,8 +9,10 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
+import hu.webuni.hr.andro.dto.PositionDto;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.model.Position;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
@@ -25,7 +27,7 @@ public interface CompanyMapper {
 	public static List<Employee> dtosToEmployees(List<EmployeeDto> e) {
 		List<Employee> result=new ArrayList<>();
 		for (EmployeeDto ed : e) {
-			result.add(new Employee(ed.getId(),ed.getName(),ed.getRank(),ed.getPayment(),ed.getEntrance(),null));
+			result.add(new Employee(ed.getId(),ed.getName(),dtoToPosition(ed.getPosition()),ed.getPayment(),ed.getEntrance(),null));
 		}
 		return result;
 	}
@@ -37,7 +39,7 @@ public interface CompanyMapper {
 	public static List<EmployeeDto> employeesToDtos(List<Employee> e) {
 		List<EmployeeDto> result=new ArrayList<>();
 		for (Employee ed : e) {
-			result.add(new EmployeeDto(ed.getId(),ed.getName(),ed.getRank(),ed.getPayment(),ed.getEntrance(),null));
+			result.add(new EmployeeDto(ed.getId(),ed.getName(),positionToDto(ed.getPosition()),ed.getPayment(),ed.getEntrance(),null));
 		}
 		return result;
 	}
@@ -49,4 +51,19 @@ public interface CompanyMapper {
 	
 	@IterableMapping(qualifiedByName = "withoutEmployees")
 	List<CompanyDto> companiesToCompanyDtosWithoutEmployees(List<Company> companies);
+	
+	
+	static PositionDto positionToDto(Position p) {
+		if (p == null)
+			return null;
+		return new PositionDto(p.getId(), p.getName(), p.getEducation(), p.getMinPayment());
+	}
+
+	static Position dtoToPosition(PositionDto p) {
+		if (p == null)
+			return null;
+		return new Position(p.getId(), p.getName(), p.getEducation(), p.getMinPayment());
+	}
+	
+	
 }

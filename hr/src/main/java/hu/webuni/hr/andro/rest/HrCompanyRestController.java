@@ -2,6 +2,7 @@ package hu.webuni.hr.andro.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.CompanyMapper;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.repository.AvgPaymentOfCompany;
 import hu.webuni.hr.andro.service.CompanyService;
 import hu.webuni.hr.andro.service.EmployeeService;
 
@@ -134,7 +137,7 @@ public class HrCompanyRestController {
 	}
 	
 	@GetMapping("/avgpayment/{companyId}")
-	public ResponseEntity<List<Object[]>> getAvgPaymentByRankOfCompany(@PathVariable long companyId) {
+	public ResponseEntity<List<AvgPaymentOfCompany>> getAvgPaymentByRankOfCompany(@PathVariable long companyId) {
 		return ResponseEntity.ok(companyService.getAvgPaymentByRankOfCompany(companyId));
 	}
 	

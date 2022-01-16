@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import hu.webuni.hr.andro.model.CompanyType;
+
 //@JsonFilter("CompanyFilterExcludeEmployees")
 public class CompanyDto {
 
@@ -12,13 +14,16 @@ public class CompanyDto {
 	private String address;
 	
 	private List<EmployeeDto> employees;
+	
+	private CompanyType companyType;
 
-	public CompanyDto(Long id, String name, String address) {
+	public CompanyDto(Long id, String name, String address, CompanyType companyType) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.employees = new ArrayList<>();
+		this.companyType = companyType;
 	}
 
 	public EmployeeDto addEmployee(EmployeeDto employee) {
@@ -90,10 +95,18 @@ public class CompanyDto {
 		this.employees = employees;
 	}
 
+	public CompanyType getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(CompanyType companyType) {
+		this.companyType = companyType;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Id: " + this.id + " - " + this.name + " (" + this.address + ")";
+		return "Id: " + this.id + " - " + this.name + " (" + this.address + ") - "+this.companyType.getName();
 	}
 
 	@Override

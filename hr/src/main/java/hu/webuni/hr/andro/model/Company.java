@@ -8,7 +8,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Company {
@@ -22,15 +24,20 @@ public class Company {
 	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
 	private List<Employee> employees;
 
+	@OneToOne
+	@JoinColumn(name = "companytype_id")
+	private CompanyType companyType;
+	
 	public Company() {
 	}
 	
-	public Company(Long id, String name, String address) {
+	public Company(Long id, String name, String address,CompanyType companyType) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.employees = new ArrayList<>();
+		this.companyType=companyType;
 	}
 
 	
@@ -106,10 +113,18 @@ public class Company {
 		this.employees = employees;
 	}
 
+	public CompanyType getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(CompanyType companyType) {
+		this.companyType = companyType;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Id: " + this.id + " - " + this.name + " (" + this.address + ")";
+		return "Id: " + this.id + " - " + this.name + " (" + this.address + ") - "+this.companyType.getName();
 	}
 
 	@Override

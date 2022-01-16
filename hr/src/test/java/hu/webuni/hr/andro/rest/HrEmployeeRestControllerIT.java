@@ -12,6 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 import hu.webuni.hr.andro.dto.EmployeeDto;
+import hu.webuni.hr.andro.dto.PositionDto;
+import hu.webuni.hr.andro.model.Position;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class HrEmployeeRestControllerIT {
@@ -25,7 +27,7 @@ public class HrEmployeeRestControllerIT {
 	void testCreateEmployeeSuccess() throws Exception {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 
-		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
+		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", new PositionDto(), 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		createEmployee(empDto);
 
@@ -44,7 +46,7 @@ public class HrEmployeeRestControllerIT {
 	void testCreateEmployeeFail() throws Exception {
 		//létező felhasználót akarunk hozzáadni
 		List<EmployeeDto> employeesBefore = getAllEmployees();
-		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", "programozó", 450000,
+		EmployeeDto empDto = new EmployeeDto(112L, "Kiss Attila", new PositionDto(), 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		createEmployeeFail(empDto);
 		List<EmployeeDto> employeesAfter = getAllEmployees();
@@ -57,7 +59,7 @@ public class HrEmployeeRestControllerIT {
 	
 	@Test
 	void testModifyEmployeeSuccess() throws Exception {
-		EmployeeDto empDto = new EmployeeDto(111L, "Fehér Edit", "programozó", 450000,
+		EmployeeDto empDto = new EmployeeDto(111L, "Fehér Edit", new PositionDto(), 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		modifyEmployee(empDto);
 
@@ -71,7 +73,7 @@ public class HrEmployeeRestControllerIT {
 	@Test
 	void testModifyEmployeeFail() throws Exception {
 		//nem létező felhasználót akarunk módosítani
-		EmployeeDto empDto = new EmployeeDto(118L, "Fehér Edit", "programozó", 450000,
+		EmployeeDto empDto = new EmployeeDto(118L, "Fehér Edit", new PositionDto(), 450000,
 				LocalDateTime.parse("2014-03-14T12:00:00"),null);
 		modifyEmployeeFail(empDto);
 

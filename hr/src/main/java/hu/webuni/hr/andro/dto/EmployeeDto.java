@@ -20,7 +20,7 @@ public class EmployeeDto {
 	@NotBlank
 	private String name;
 	@NotBlank
-	private String rank;
+	private PositionDto position;
 	@Min(1)
 	private int payment;
 	@BeforeNow
@@ -29,11 +29,11 @@ public class EmployeeDto {
 	//@JsonBackReference
 	private CompanyDto company;
 	
-	public EmployeeDto(Long id, String name, String rank, int payment, LocalDateTime entrance, CompanyDto company) {
+	public EmployeeDto(Long id, String name, PositionDto position, int payment, LocalDateTime entrance, CompanyDto company) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.rank = rank;
+		this.position = position;
 		this.payment = payment;
 		this.entrance = entrance;
 		this.company=company;
@@ -51,11 +51,11 @@ public class EmployeeDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getRank() {
-		return rank;
+	public PositionDto getPosition() {
+		return position;
 	}
-	public void setRank(String rank) {
-		this.rank = rank;
+	public void setPosition(PositionDto position) {
+		this.position = position;
 	}
 	public int getPayment() {
 		return payment;
@@ -85,7 +85,7 @@ public class EmployeeDto {
 	
 	@Override
 	public String toString() {
-		return this.id+" "+this.name+" ("+this.rank+") - "+this.payment+" - "+this.entrance;
+		return this.id+" "+this.name+" ("+this.position.getName()+") - "+this.payment+" - "+this.entrance;
 	}
 	
 	

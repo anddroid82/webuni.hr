@@ -10,21 +10,27 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 import hu.webuni.hr.andro.validation.BeforeNow;
 
 @Entity
-@NamedQuery(name = "Employee.findAll",query = "select e from Employee e order by e.name")
+//@NamedQuery(name = "Employee.findAll",query = "select e from Employee e order by e.name")
 public class Employee {
 	@Id
 	@GeneratedValue
 	private Long id;
 	@NotBlank
 	private String name;
-	@NotBlank
-	private String rank;
+	//@NotBlank
+	//private String rank;
+	
+	@OneToOne
+	@JoinColumn(name = "position_id")
+	private Position position;
+	
 	@Min(1)
 	private int payment;
 	@BeforeNow //a @Past is jó lett volna, csak létre akartam hozni egy sajátot, hogy hogy működik
@@ -37,11 +43,11 @@ public class Employee {
 	public Employee() {	
 	}
 
-	public Employee(Long id, String name, String rank, int payment, LocalDateTime entrance, Company company) {
+	public Employee(Long id, String name, Position position, int payment, LocalDateTime entrance, Company company) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.rank = rank;
+		this.position = position;
 		this.payment = payment;
 		this.entrance = entrance;
 		this.company = company;
@@ -71,12 +77,12 @@ public class Employee {
 		this.name = name;
 	}
 
-	public String getRank() {
-		return rank;
+	public Position getPosition() {
+		return position;
 	}
 
-	public void setRank(String rank) {
-		this.rank = rank;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	public int getPayment() {
@@ -103,7 +109,7 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return this.id + " " + this.name + " (" + this.rank + ") - " + this.payment + " - " + this.entrance;
+		return this.id + " " + this.name + " (" + this.position.getName() + ") - " + this.payment + " - " + this.entrance;
 	}
 
 	@Override

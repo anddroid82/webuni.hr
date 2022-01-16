@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
@@ -33,8 +34,11 @@ public class HrEmployeeRestController {
 	EmployeeMapper employeeMapper;
 
 	@GetMapping
-	public List<EmployeeDto> getAll(){
-		return employeeMapper.employeesToDtos(employeeService.getEmployees());
+	public List<EmployeeDto> getAll(
+			@RequestParam(required = false,defaultValue = "-1") int pn, 
+			@RequestParam(required = false,defaultValue = "-1") int ps,
+			@RequestParam(required = false,defaultValue = "name") String sort){
+		return employeeMapper.employeesToDtos(employeeService.getEmployees(pn,ps,sort));
 	}
 	
 	@GetMapping("/{id}")
