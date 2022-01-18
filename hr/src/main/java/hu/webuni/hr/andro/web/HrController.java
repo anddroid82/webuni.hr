@@ -16,6 +16,8 @@ import hu.webuni.hr.andro.mapper.CompanyMapper;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.model.Position;
+import hu.webuni.hr.andro.repository.PositionRepository;
 import hu.webuni.hr.andro.service.CompanyService;
 import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.validation.EmployeeAdd;
@@ -34,6 +36,9 @@ public class HrController {
 
 	@Autowired
 	CompanyMapper companyMapper;
+	
+	@Autowired
+	PositionRepository positionRepository;
 
 	@GetMapping("/")
 	public String home() {
@@ -60,7 +65,9 @@ public class HrController {
 
 	@GetMapping("add")
 	public String addEmployee(Map<String, Object> model) {
-		model.put("employee", new EmployeeDto(0L, "", new PositionDto(), 0, null,null));
+		Position p=positionRepository.findAll().get(0);
+		model.put("employee", new EmployeeDto(0L, "", CompanyMapper.positionToDto(p), 0, null,null));
+		model.put("positions", positionRepository.findAll());
 		model.put("type", "add");
 		return "modify";
 	}
@@ -70,6 +77,7 @@ public class HrController {
 			Map<String, Object> model) {
 		if (bindingresult.hasErrors()) {
 			model.put("employee", employee);
+			model.put("positions", positionRepository.findAll());
 			model.put("type", "add");
 			model.put("errors", bindingresult.getFieldErrors());
 			return "modify";
@@ -85,6 +93,7 @@ public class HrController {
 		if (bindingresult.hasErrors()) {
 			model.put("employee", employee);
 			model.put("type", "modify");
+			model.put("positions", positionRepository.findAll());
 			model.put("errors", bindingresult.getFieldErrors());
 			return "modify";
 		} else {
@@ -106,6 +115,7 @@ public class HrController {
 			return "redirect:/error";
 		} else {
 			model.put("employee", emp);
+			model.put("positions", positionRepository.findAll());
 			model.put("type", "modify");
 			return "modify";
 		}

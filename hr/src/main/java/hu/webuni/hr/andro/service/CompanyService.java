@@ -29,7 +29,11 @@ public class CompanyService {
 			if (emp == null) {
 				emp = employeeService.addEmployee(employee);
 			}
-			//TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ? 
+			//TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ?
+			// ezzel egyáltalán kell foglalkozni, vagy nem, mert a repository mindig az aktuális állapotot adja vissza
+			if (emp.getCompany() != null) {
+				deleteEmployeeFromCompany(emp.getId(), emp.getCompany().getId());
+			}
 			emp = company.addEmployee(emp);
 			return employeeService.modifyEmployee(emp);
 		}

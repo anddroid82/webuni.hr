@@ -14,7 +14,14 @@
 <div class="card" style="width: 18rem;">
   <div class="card-body">
     <h5 class="card-title"><input placeholder="name" th:field="*{name}" class="form-control"><span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span></h5>
-    <p class="card-subtitle"><input placeholder="rank" th:field="*{rank}" class="form-control"></p>
+    <p class="card-subtitle">
+    	<div class="form-group">
+    	<select name="position" id="position" class="form-control">
+    		<option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}" th:selected="${pos.id} == *{position.id}">
+    		</option     >
+    	</select >
+    	</div>
+    </p>
   </div>
   <ul class="list-group list-group-flush">
   	<!-- <li class="list-group-item"><label class="form-label">Id: </label><input th:field="*{id}" class="form-control" th:readonly="${type == 'modify'}"></li> -->

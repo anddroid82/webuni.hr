@@ -6,7 +6,6 @@ import java.time.temporal.ChronoUnit;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import hu.webuni.hr.andro.validation.BeforeNow;
@@ -19,7 +18,6 @@ public class EmployeeDto {
 	private Long id;
 	@NotBlank
 	private String name;
-	@NotBlank
 	private PositionDto position;
 	@Min(1)
 	private int payment;
