@@ -12,4 +12,6 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 	@Query(value = "select p from Position p order by p.name")
 	List<Position> findAll();
 	
+	Position getByName(String name);
+	
 }

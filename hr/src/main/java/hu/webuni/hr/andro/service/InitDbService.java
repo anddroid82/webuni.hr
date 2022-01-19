@@ -45,9 +45,9 @@ public class InitDbService {
 	public void insertTestData() {
 		employeeRepository.truncateTable();
 		
-		Position p1=new Position(1L,"Rendszergazda",Education.ERETTSEGI,350000);
+		Position p1=new Position(1L,"Rendszergazda",Education.ERETTSEGI,400000);
 		p1=positionRepository.save(p1);
-		Position p2=new Position(2L,"Grafikus",Education.ERETTSEGI,320000);
+		Position p2=new Position(2L,"Grafikus",Education.ERETTSEGI,350000);
 		p2=positionRepository.save(p2);
 		Position p3=new Position(3L,"PHP programozó",Education.FOISKOLA,400000);
 		p3=positionRepository.save(p3);

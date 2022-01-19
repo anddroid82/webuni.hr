@@ -15,13 +15,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.model.Position;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
+import hu.webuni.hr.andro.repository.PositionRepository;
 
 @Service
 public abstract class EmployeeAbstractService implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	PositionRepository positionRepository;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -89,7 +94,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 //	}
 
 	public List<Employee> getEmployeesByRank(String rank) {
-		return employeeRepository.findByPosition_Name(rank);
+		return employeeRepository.findByPositionName(rank);
 	}
 
 	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(String name) {
@@ -102,6 +107,17 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 
 	public List<Employee> getEmployeesByPaymentGreaterThan(int payment) {
 		return employeeRepository.findByPaymentGreaterThan(payment);
+	}
+	
+	@Transactional
+	public List<Employee> setPaymentToMinimumByPosition(String positionName){
+		Position position = positionRepository.getByName(positionName);
+		List<Employee> emps = employeeRepository.findByPositionNameAndPaymentLessThan(positionName,position.getMinPayment());
+		for (Employee e : emps) {
+			e.setPayment(position.getMinPayment());
+			employeeRepository.save(e);
+		}
+		return emps;
 	}
 
 }
