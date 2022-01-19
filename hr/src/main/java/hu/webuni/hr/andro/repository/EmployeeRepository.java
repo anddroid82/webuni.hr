@@ -2,13 +2,16 @@ package hu.webuni.hr.andro.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.model.Position;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, PagingAndSortingRepository<Employee, Long> {
 	
@@ -27,7 +30,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Pagin
 	List<Employee> findByNameStartsWithIgnoreCase(String name);
 	List<Employee> findByEntranceBetween(LocalDateTime start,LocalDateTime end);
 	
-	List<Employee> findByPositionNameAndPaymentLessThan(String name,Integer payment);
+	List<Employee> findByPositionAndPaymentLessThan(Position p, int payment);
 	
 	
 }

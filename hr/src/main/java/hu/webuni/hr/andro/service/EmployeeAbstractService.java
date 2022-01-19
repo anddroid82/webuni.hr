@@ -110,13 +110,15 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 	}
 	
 	@Transactional
-	public List<Employee> setPaymentToMinimumByPosition(String positionName){
+	public List<Employee> setPaymentToMinimumByPosition(String positionName, int payment){
 		Position position = positionRepository.getByName(positionName);
-		List<Employee> emps = employeeRepository.findByPositionNameAndPaymentLessThan(positionName,position.getMinPayment());
+		List<Employee> emps = employeeRepository.findByPositionAndPaymentLessThan(position, payment);
 		for (Employee e : emps) {
-			e.setPayment(position.getMinPayment());
+			e.setPayment(payment);
 			employeeRepository.save(e);
 		}
+		position.setMinPayment(payment);
+		positionRepository.save(position);
 		return emps;
 	}
 

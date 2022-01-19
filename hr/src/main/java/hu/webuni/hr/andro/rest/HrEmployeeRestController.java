@@ -102,8 +102,8 @@ public class HrEmployeeRestController {
 		return employeeMapper.employeesToDtos(employeeService.getEmployeesByEntranceBetween(startDT,endDT));
 	}
 	
-	@GetMapping("/setpaymenttominbypos/{rank}")
-	public List<EmployeeDto> setPaymentToMinimumByPosition(@PathVariable String rank) {
-		return employeeMapper.employeesToDtos(employeeService.setPaymentToMinimumByPosition(rank));
+	@GetMapping("/setpaymenttominbypos/{rank}/{payment}")
+	public List<EmployeeDto> setPaymentToMinimumByPosition(@PathVariable String rank,@PathVariable int payment) {
+		return employeeMapper.employeesToDtos(employeeService.setPaymentToMinimumByPosition(rank,payment));
 	}
 }

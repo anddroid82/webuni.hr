@@ -24,6 +24,6 @@ public interface EmployeeService {
 	public List<Employee> getEmployeesByNameStartsWithIgnoreCase(String name);
 	public List<Employee> getEmployeesByEntranceBetween(LocalDateTime start,LocalDateTime end);
 	
-	public List<Employee> setPaymentToMinimumByPosition(String positionName);
+	public List<Employee> setPaymentToMinimumByPosition(String positionName, int payment);
 	
 }
