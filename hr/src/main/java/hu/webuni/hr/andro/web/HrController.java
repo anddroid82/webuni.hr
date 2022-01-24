@@ -124,7 +124,7 @@ public class HrController {
 			return "redirect:/error";
 		} else {
 			model.put("employee", emp);
-			//TODO: itt van a probléma, és a templates/modify.html-ben
+			//TODO: itt van a probléma
 			model.put("positions", positionMapper.positionsToDtos(positionService.getPositions()));
 			model.put("type", "modify");
 			return "modify";

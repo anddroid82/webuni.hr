@@ -17,8 +17,6 @@ import javax.validation.constraints.NotBlank;
 
 import hu.webuni.hr.andro.validation.BeforeNow;
 
-@Entity
-//@NamedQuery(name = "Employee.findAll",query = "select e from Employee e order by e.name")
 @NamedEntityGraph(
 		name = "Employee.full", 
 		attributeNodes = {
@@ -32,6 +30,7 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 				)
 		}
 )
+@Entity
 public class Employee {
 	@Id
 	@GeneratedValue
