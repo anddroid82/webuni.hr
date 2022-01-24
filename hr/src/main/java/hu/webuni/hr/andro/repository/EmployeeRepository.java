@@ -30,7 +30,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Pagin
 	List<Employee> findByNameStartsWithIgnoreCase(String name);
 	List<Employee> findByEntranceBetween(LocalDateTime start,LocalDateTime end);
 	
-	List<Employee> findByPositionAndPaymentLessThan(Position p, int payment);
+	List<Employee> findByPosition_NameAndPaymentLessThan(String p, int payment);
 	
 	
 }
