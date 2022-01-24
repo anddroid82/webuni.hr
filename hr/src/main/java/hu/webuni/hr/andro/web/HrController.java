@@ -22,6 +22,7 @@ import hu.webuni.hr.andro.model.Position;
 import hu.webuni.hr.andro.repository.PositionRepository;
 import hu.webuni.hr.andro.service.CompanyService;
 import hu.webuni.hr.andro.service.EmployeeService;
+import hu.webuni.hr.andro.service.PositionService;
 import hu.webuni.hr.andro.validation.EmployeeAdd;
 
 @Controller
@@ -40,7 +41,7 @@ public class HrController {
 	CompanyMapper companyMapper;
 	
 	@Autowired
-	PositionRepository positionRepository;
+	PositionService positionService;
 
 	@GetMapping("/")
 	public String home() {
@@ -67,9 +68,9 @@ public class HrController {
 
 	@GetMapping("add")
 	public String addEmployee(Map<String, Object> model) {
-		Position p=positionRepository.findAll().get(0);
+		Position p=positionService.getPositions().get(0);
 		model.put("employee", new EmployeeDto(0L, "", CompanyMapper.positionToDto(p), 0, null,null));
-		model.put("positions", positionRepository.findAll());
+		model.put("positions", positionService.getPositions());
 		model.put("type", "add");
 		return "modify";
 	}
@@ -79,7 +80,7 @@ public class HrController {
 			Map<String, Object> model) {
 		if (bindingresult.hasErrors()) {
 			model.put("employee", employee);
-			model.put("positions", positionRepository.findAll());
+			model.put("positions", positionService.getPositions());
 			model.put("type", "add");
 			model.put("errors", bindingresult.getFieldErrors());
 			return "modify";
@@ -92,10 +93,12 @@ public class HrController {
 	@PostMapping("modifyEmployee")
 	public String modifyEmployeeAction(@Valid EmployeeDto employee,
 			BindingResult bindingresult, Map<String, Object> model) {
+		
 		if (bindingresult.hasErrors()) {
+			System.out.println("hiba lesz 1:"+employee);
 			model.put("employee", employee);
 			model.put("type", "modify");
-			model.put("positions", positionRepository.findAll());
+			model.put("positions", positionService.getPositions());
 			model.put("errors", bindingresult.getFieldErrors());
 			return "modify";
 		} else {
@@ -113,11 +116,12 @@ public class HrController {
 	@GetMapping("/modify/{id}")
 	public String modifyEmployee(@PathVariable long id, Map<String, Object> model) {
 		EmployeeDto emp = employeeMapper.employeeToDto(employeeService.getEmployee(id));
+		System.out.println("pos: "+emp.getPosition());
 		if (emp == null) {
 			return "redirect:/error";
 		} else {
 			model.put("employee", emp);
-			model.put("positions", positionRepository.findAll());
+			model.put("positions", positionService.getPositions());
 			model.put("type", "modify");
 			return "modify";
 		}
@@ -136,13 +140,13 @@ public class HrController {
 
 	@GetMapping("/companies")
 	public String getCompanies(Map<String,Object> model) {
-		model.put("companies", companyService.getCompanies());
+		model.put("companies", companyService.getCompanies(false));
 		return "company/companies";
 	}
 	
 	@GetMapping("/company/{id}/details")
 	public String getCompanyData(@PathVariable Long id, Map<String, Object> model) {
-		CompanyDto companyDto = companyMapper.companyToCompanyDto(companyService.getCompany(id));
+		CompanyDto companyDto = companyMapper.companyToCompanyDto(companyService.getCompany(id,true));
 		model.put("company", companyDto);
 		model.put("employees", companyDto.getEmployees());
 		model.put("referer", "companydetails");
@@ -152,7 +156,7 @@ public class HrController {
 	@GetMapping("/company/{companyId}/employeedelete/{employeeId}")
 	public String deleteEmployeeFromCompany(@PathVariable long companyId, @PathVariable long employeeId,
 			Map<String, Object> model) {
-		Company company = companyService.getCompany(companyId);
+		Company company = companyService.getCompany(companyId,false);
 		if (company == null) {
 			return "redirect:/error";
 		}

@@ -106,4 +106,9 @@ public class HrEmployeeRestController {
 	public List<EmployeeDto> setPaymentToMinimumByPosition(@PathVariable String rank,@PathVariable int payment) {
 		return employeeMapper.employeesToDtos(employeeService.setPaymentToMinimumByPosition(rank,payment));
 	}
+	
+	@PostMapping("/search")
+	public List<EmployeeDto> search(@RequestBody EmployeeDto employee) {
+		return employeeMapper.employeesToDtos(employeeService.findEmployeesByExample(employeeMapper.dtoToEmployee(employee)));
+	}
 }

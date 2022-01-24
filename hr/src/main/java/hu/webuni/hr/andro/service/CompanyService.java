@@ -1,6 +1,7 @@
 package hu.webuni.hr.andro.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -21,9 +22,8 @@ public class CompanyService {
 	@Autowired
 	CompanyRepository companyRepository;
 	
-	@Transactional
 	public Employee addEmployeeToCompany(Employee employee, long companyId) {
-		Company company = this.getCompany(companyId);
+		Company company = this.getCompany(companyId,false);
 		if (company != null) {
 			Employee emp = employeeService.getEmployee(employee.getId());
 			if (emp == null) {
@@ -40,9 +40,8 @@ public class CompanyService {
 		return null;
 	}
 	
-	@Transactional
 	public Employee deleteEmployeeFromCompany(long employeeId,long companyId) {
-		Company company = this.getCompany(companyId);
+		Company company = this.getCompany(companyId,false);
 		if (company != null) {
 			Employee employee = company.removeEmployee(employeeId);
 			if (employee != null) {
@@ -62,7 +61,7 @@ public class CompanyService {
 	}
 	
 	public List<AvgPaymentOfCompany> getAvgPaymentByRankOfCompany(long companyId) {
-		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId));
+		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId,false));
 	}
 	
 	/*public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
@@ -75,13 +74,11 @@ public class CompanyService {
 	}*/
 	
 	
-	@Transactional
 	public Company addCompany(Company company) {
 		company.setId(null);
 		return companyRepository.save(company);
 	}
 	
-	@Transactional
 	public Company modifyCompany(Company company) {
 		if (companyRepository.existsById(company.getId())) {
 			return companyRepository.save(company);
@@ -89,9 +86,15 @@ public class CompanyService {
 		return null;
 	}
 
-	public Company getCompany(Long id) {
-		if (companyRepository.existsById(id)) {
-			return companyRepository.getById(id);
+	public Company getCompany(Long id,boolean full) {
+		Optional<Company> comOpt = null;
+		if (full) {
+			comOpt = companyRepository.findCompanyByIdWithEmployees(id);
+		}else {
+			comOpt = companyRepository.findById(id);
+		}
+		if (comOpt.isPresent()) {
+			return comOpt.get();
 		}
 		return null;
 	}
@@ -100,18 +103,21 @@ public class CompanyService {
 		return this.deleteCompany(company.getId());
 	}
 
-	@Transactional
 	public Company deleteCompany(Long id) {
-		if (companyRepository.existsById(id)) {
-			Company c = companyRepository.getById(id);
+		Optional<Company> comOpt = companyRepository.findById(id);
+		if (comOpt.isPresent()) {
 			companyRepository.deleteById(id);
-			return c;
+			return comOpt.get();
 		}
 		return null;
 	}
 
-	public List<Company> getCompanies() {
-		return companyRepository.findAll();
+	public List<Company> getCompanies(boolean full) {
+		if (full) {
+			return companyRepository.findAllWithEmployees();
+		}else {
+			return companyRepository.findAll();
+		}
 	}
 
 	

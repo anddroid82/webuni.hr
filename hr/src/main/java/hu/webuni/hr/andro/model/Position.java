@@ -3,7 +3,9 @@ package hu.webuni.hr.andro.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 
+@NamedEntityGraph(name = "Position.full",includeAllAttributes = true)
 @Entity
 public class Position {
 	

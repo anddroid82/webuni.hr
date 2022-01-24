@@ -9,7 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -17,6 +18,12 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 
 @Entity
 //@NamedQuery(name = "Employee.findAll",query = "select e from Employee e order by e.name")
+@NamedEntityGraph(
+		name = "Employee.full", 
+		attributeNodes = {
+				@NamedAttributeNode("position"),
+				@NamedAttributeNode("company")
+		})
 public class Employee {
 	@Id
 	@GeneratedValue
@@ -26,7 +33,7 @@ public class Employee {
 	//@NotBlank
 	//private String rank;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "position_id")
 	private Position position;
 	

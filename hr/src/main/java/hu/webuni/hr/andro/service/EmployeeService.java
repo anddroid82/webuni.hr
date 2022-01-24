@@ -26,4 +26,5 @@ public interface EmployeeService {
 	
 	public List<Employee> setPaymentToMinimumByPosition(String positionName, int payment);
 	
+	public List<Employee> findEmployeesByExample(Employee example);
 }

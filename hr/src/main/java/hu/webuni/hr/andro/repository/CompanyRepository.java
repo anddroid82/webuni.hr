@@ -1,13 +1,23 @@
 package hu.webuni.hr.andro.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import hu.webuni.hr.andro.model.Company;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
+	
+	@EntityGraph("Company.full")
+	@Query("select c from Company c")
+	List<Company> findAllWithEmployees();
+	
+	@EntityGraph("Company.full")
+	@Query("select c from Company c where id=:id")
+	Optional<Company> findCompanyByIdWithEmployees(long id);
 	
 	@Query("select distinct c from Employee e join e.company c where e.payment>:payment")
 	List<Company> findByEmployeePaymentGreaterThan(int payment);

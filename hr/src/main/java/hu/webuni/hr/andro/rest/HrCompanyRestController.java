@@ -57,25 +57,25 @@ public class HrCompanyRestController {
 	public ResponseEntity<List<CompanyDto>> getAll(@RequestParam(required = false) boolean full) {
 		List<CompanyDto> companies = null;
 		if (full) {
-			companies = new ArrayList<>(companyMapper.companiesToCompanyDtos(companyService.getCompanies()));
+			companies = new ArrayList<>(companyMapper.companiesToCompanyDtos(companyService.getCompanies(full)));
 		} else {
 			companies = new ArrayList<>(
-					companyMapper.companiesToCompanyDtosWithoutEmployees(companyService.getCompanies()));
+					companyMapper.companiesToCompanyDtosWithoutEmployees(companyService.getCompanies(full)));
 		}
 		return ResponseEntity.ok(companies);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CompanyDto> getCompany(@PathVariable Long id, @RequestParam(required = false) boolean full) {
-		Company c = companyService.getCompany(id);
+		Company c = companyService.getCompany(id,full);
 		if (c == null) {
 			return ResponseEntity.notFound().build();
 		} else {
 			if (full) {
-				return ResponseEntity.ok(companyMapper.companyToCompanyDto(companyService.getCompany(id)));
+				return ResponseEntity.ok(companyMapper.companyToCompanyDto(companyService.getCompany(id,full)));
 			} else {
 				return ResponseEntity
-						.ok(companyMapper.companyToCompanyDtoWithoutEmployees(companyService.getCompany(id)));
+						.ok(companyMapper.companyToCompanyDtoWithoutEmployees(companyService.getCompany(id,full)));
 			}
 		}
 	}

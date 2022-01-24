@@ -8,38 +8,44 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
+@NamedEntityGraph(name = "Company.full", attributeNodes = {
+		@NamedAttributeNode(value = "employees", subgraph = "Employee.full"),
+		@NamedAttributeNode("companyType") }, subgraphs = {
+				@NamedSubgraph(name = "Employee.full", attributeNodes = { @NamedAttributeNode("position") }) })
 public class Company {
-	
+
 	@Id
 	@GeneratedValue
 	private Long id;
 	private String name;
 	private String address;
-	
+
 	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
 	private List<Employee> employees;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "companytype_id")
 	private CompanyType companyType;
-	
+
 	public Company() {
 	}
-	
-	public Company(Long id, String name, String address,CompanyType companyType) {
+
+	public Company(Long id, String name, String address, CompanyType companyType) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.employees = new ArrayList<>();
-		this.companyType=companyType;
+		this.companyType = companyType;
 	}
 
-	
 	public Employee addEmployee(Employee employee) {
 		Employee emp = this.getEmployee(employee.getId());
 		if (emp == null) {
@@ -58,7 +64,6 @@ public class Company {
 		return null;
 	}
 
-	
 	public Employee removeEmployee(long id) {
 		Employee emp = this.getEmployee(id);
 		if (emp != null) {
@@ -68,17 +73,12 @@ public class Company {
 		}
 		return null;
 	}
-	
+
 	/*
-	public void removeAllEmployee() {
-		ListIterator<Employee> iterator = this.employees.listIterator();
-		while (iterator.hasNext()) {
-			Employee emp = iterator.next();
-			emp.setCompany(null);
-			iterator.remove();
-		}
-	}
-	*/
+	 * public void removeAllEmployee() { ListIterator<Employee> iterator =
+	 * this.employees.listIterator(); while (iterator.hasNext()) { Employee emp =
+	 * iterator.next(); emp.setCompany(null); iterator.remove(); } }
+	 */
 
 	public Long getId() {
 		return id;
@@ -123,7 +123,7 @@ public class Company {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Id: " + this.id + " - " + this.name + " (" + this.address + ") - "+this.companyType.getName();
+		return "Id: " + this.id + " - " + this.name + " (" + this.address + ") - " + this.companyType.getName();
 	}
 
 	@Override
@@ -135,4 +135,3 @@ public class Company {
 	}
 
 }
-
