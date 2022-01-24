@@ -116,7 +116,6 @@ public class HrController {
 	@GetMapping("/modify/{id}")
 	public String modifyEmployee(@PathVariable long id, Map<String, Object> model) {
 		EmployeeDto emp = employeeMapper.employeeToDto(employeeService.getEmployee(id));
-		System.out.println("pos: "+emp.getPosition());
 		if (emp == null) {
 			return "redirect:/error";
 		} else {
