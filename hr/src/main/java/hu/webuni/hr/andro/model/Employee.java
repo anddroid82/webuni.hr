@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -21,9 +22,16 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 @NamedEntityGraph(
 		name = "Employee.full", 
 		attributeNodes = {
-				@NamedAttributeNode("position"),
-				@NamedAttributeNode("company")
-		})
+				@NamedAttributeNode(value = "position"),
+				@NamedAttributeNode(value = "company",subgraph = "Company.full")
+		},
+		subgraphs = {
+				@NamedSubgraph(
+						name = "Company.full",
+						attributeNodes = {@NamedAttributeNode("companyType")}
+				)
+		}
+)
 public class Employee {
 	@Id
 	@GeneratedValue

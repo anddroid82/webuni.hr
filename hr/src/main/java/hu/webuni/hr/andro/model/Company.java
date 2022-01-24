@@ -15,10 +15,19 @@ import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedEntityGraph(name = "Company.full", attributeNodes = {
-		@NamedAttributeNode(value = "employees", subgraph = "Employee.full"),
-		@NamedAttributeNode("companyType") }, subgraphs = {
-				@NamedSubgraph(name = "Employee.full", attributeNodes = { @NamedAttributeNode("position") }) })
+@NamedEntityGraph(
+		name = "Company.full", 
+		attributeNodes = {
+				@NamedAttributeNode(value = "employees", subgraph = "Employee.full"),
+				@NamedAttributeNode("companyType") 
+		}, 
+		subgraphs = {
+				@NamedSubgraph(
+						name = "Employee.full", 
+						attributeNodes = { @NamedAttributeNode("position") }
+				) 
+		}
+)
 public class Company {
 
 	@Id

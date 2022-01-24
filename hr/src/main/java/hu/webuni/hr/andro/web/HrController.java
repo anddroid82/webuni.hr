@@ -16,6 +16,7 @@ import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.mapper.CompanyMapper;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
+import hu.webuni.hr.andro.mapper.PositionMapper;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Position;
@@ -39,6 +40,9 @@ public class HrController {
 
 	@Autowired
 	CompanyMapper companyMapper;
+	
+	@Autowired
+	PositionMapper positionMapper;
 	
 	@Autowired
 	PositionService positionService;
@@ -120,7 +124,8 @@ public class HrController {
 			return "redirect:/error";
 		} else {
 			model.put("employee", emp);
-			model.put("positions", positionService.getPositions());
+			//TODO: itt van a probléma, és a templates/modify.html-ben
+			model.put("positions", positionMapper.positionsToDtos(positionService.getPositions()));
 			model.put("type", "modify");
 			return "modify";
 		}
