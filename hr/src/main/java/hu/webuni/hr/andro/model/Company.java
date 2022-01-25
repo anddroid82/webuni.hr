@@ -13,6 +13,7 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
+import javax.transaction.Transactional;
 
 @Entity
 @NamedEntityGraph(
@@ -54,7 +55,7 @@ public class Company {
 		this.employees = new ArrayList<>();
 		this.companyType = companyType;
 	}
-
+	
 	public Employee addEmployee(Employee employee) {
 		Employee emp = this.getEmployee(employee.getId());
 		if (emp == null) {

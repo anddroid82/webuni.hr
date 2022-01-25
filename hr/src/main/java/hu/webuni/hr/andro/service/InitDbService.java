@@ -41,8 +41,9 @@ public class InitDbService {
 		companyTypeRepository.deleteAll();
 	}
 	
-
+	//@Transactional
 	public void insertTestData() {
+		clearDb();
 		employeeRepository.truncateTable();
 		
 		Position p1=new Position(1L,"Rendszergazda",Education.ERETTSEGI,400000);
@@ -62,23 +63,12 @@ public class InitDbService {
 		Position p8=new Position(8L,"Rendszer tervező",Education.EGYETEM,650000);
 		p8=positionRepository.save(p8);
 		
-		
-		List<Employee> employeesForStart = new ArrayList<>();
-		employeesForStart
-				.add(new Employee(1L, "Teszt Elek", p1, 450000, LocalDateTime.of(2019, 10, 2, 0, 0),null));
-		employeesForStart.add(new Employee(2L, "Nap Pali", p2, 600000, LocalDateTime.of(2015, 4, 12, 0, 0),null));
-		employeesForStart
-				.add(new Employee(3L, "Tra Pista", p8, 800000, LocalDateTime.of(2011, 2, 23, 0, 0),null));
-		employeesForStart
-				.add(new Employee(4L, "Kovács Kázmér", p6, 700000, LocalDateTime.of(2014, 3, 13, 0, 0),null));
-		employeesForStart
-				.add(new Employee(5L, "Fodor Elek", p5, 550000, LocalDateTime.of(2016, 8, 14, 0, 0),null));
-		employeesForStart
-				.add(new Employee(6L, "Lukács Tamás", p1, 380000, LocalDateTime.of(2010, 2, 26, 0, 0),null));
-		List<Employee> empResult = new ArrayList<>();
-		for (Employee e : employeesForStart) {
-			empResult.add(employeeRepository.save(e));
-		}
+		Employee e1=employeeRepository.save(new Employee(1L, "Teszt Elek", p1, 450000, LocalDateTime.of(2019, 10, 2, 0, 0),null));
+		Employee e2=employeeRepository.save(new Employee(2L, "Nap Pali", p2, 600000, LocalDateTime.of(2015, 4, 12, 0, 0),null));
+		Employee e3=employeeRepository.save(new Employee(3L, "Tra Pista", p8, 800000, LocalDateTime.of(2011, 2, 23, 0, 0),null));
+		Employee e4=employeeRepository.save(new Employee(4L, "Kovács Kázmér", p6, 700000, LocalDateTime.of(2014, 3, 13, 0, 0),null));
+		Employee e5=employeeRepository.save(new Employee(5L, "Fodor Elek", p5, 550000, LocalDateTime.of(2016, 8, 14, 0, 0),null));
+		Employee e6=employeeRepository.save(new Employee(6L, "Lukács Tamás", p1, 380000, LocalDateTime.of(2010, 2, 26, 0, 0),null));
 		
 		CompanyType ct1=new CompanyType(1L,"Kft.");
 		ct1=companyTypeRepository.save(ct1);
@@ -89,21 +79,19 @@ public class InitDbService {
 		CompanyType ct4=new CompanyType(4L,"Bt.");
 		ct4=companyTypeRepository.save(ct4);
 		
-		System.out.println(empResult.get(0));
 		Company c1 = new Company(1L, "Teszt Cég 01", "Teszt Cím 01",ct1);
-		c1.addEmployee(empResult.get(0));
-		c1.addEmployee(empResult.get(1));
+		c1.addEmployee(e1);
+		c1.addEmployee(e2);
 		companyRepository.save(c1);
 		
 		Company c2 = new Company(2L, "Teszt Cég 02", "Teszt Cím 02",ct2);
-		c2.addEmployee(empResult.get(2));
-		c2.addEmployee(empResult.get(3));
+		c2.addEmployee(e3);
+		c2.addEmployee(e4);
 		companyRepository.save(c2);
 		
 		Company c3 = new Company(3L, "Teszt Cég 03", "Teszt Cím 03",ct3);
-		c3.addEmployee(empResult.get(4));
-		c3.addEmployee(empResult.get(5));
+		c3.addEmployee(e5);
+		c3.addEmployee(e6);
 		companyRepository.save(c3);
-		
 	}
 }

@@ -3,8 +3,6 @@ package hu.webuni.hr.andro.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +50,15 @@ public class CompanyService {
 		return null;
 	}
 	
+	public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
+		Company company = this.getCompany(companyId,false);
+		if (company != null) {
+			company.setEmployees(employees);
+			return true;
+		}
+		return false;
+	}
+	
 	public List<Company> findByEmployeePaymentGreaterThan(int payment) {
 		return companyRepository.findByEmployeePaymentGreaterThan(payment);
 	}
@@ -63,16 +70,6 @@ public class CompanyService {
 	public List<AvgPaymentOfCompany> getAvgPaymentByRankOfCompany(long companyId) {
 		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId,false));
 	}
-	
-	/*public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
-		Company company = this.getCompany(companyId);
-		if (company != null) {
-			company.setEmployees(employees);
-			return true;
-		}
-		return false;
-	}*/
-	
 	
 	public Company addCompany(Company company) {
 		company.setId(null);
