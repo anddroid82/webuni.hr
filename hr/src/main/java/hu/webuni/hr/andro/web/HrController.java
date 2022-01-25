@@ -97,7 +97,6 @@ public class HrController {
 	@PostMapping("modifyEmployee")
 	public String modifyEmployeeAction(@Valid EmployeeDto employee,
 			BindingResult bindingresult, Map<String, Object> model) {
-		
 		if (bindingresult.hasErrors()) {
 			System.out.println("hiba lesz 1:"+employee);
 			model.put("employee", employee);
@@ -112,7 +111,6 @@ public class HrController {
 			empFromServ.setPayment(employee.getPayment());
 			empFromServ.setEntrance(employee.getEntrance());
 			employeeService.modifyEmployee(empFromServ);
-			
 			return "redirect:list";
 		}
 	}

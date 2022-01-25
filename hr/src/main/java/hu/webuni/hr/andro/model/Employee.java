@@ -49,7 +49,7 @@ public class Employee {
 	@BeforeNow //a @Past is jó lett volna, csak létre akartam hozni egy sajátot, hogy hogy működik
 	private LocalDateTime entrance;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "company_id")
 	private Company company;
 	

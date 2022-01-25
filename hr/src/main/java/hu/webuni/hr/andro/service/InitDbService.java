@@ -41,7 +41,7 @@ public class InitDbService {
 		companyTypeRepository.deleteAll();
 	}
 	
-	@Transactional
+
 	public void insertTestData() {
 		employeeRepository.truncateTable();
 		
@@ -89,7 +89,7 @@ public class InitDbService {
 		CompanyType ct4=new CompanyType(4L,"Bt.");
 		ct4=companyTypeRepository.save(ct4);
 		
-		//company test data
+		System.out.println(empResult.get(0));
 		Company c1 = new Company(1L, "Teszt Cég 01", "Teszt Cím 01",ct1);
 		c1.addEmployee(empResult.get(0));
 		c1.addEmployee(empResult.get(1));
@@ -104,5 +104,6 @@ public class InitDbService {
 		c3.addEmployee(empResult.get(4));
 		c3.addEmployee(empResult.get(5));
 		companyRepository.save(c3);
+		
 	}
 }

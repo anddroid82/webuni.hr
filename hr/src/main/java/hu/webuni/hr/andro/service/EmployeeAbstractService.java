@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Position;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
@@ -61,8 +63,9 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		return this.deleteEmployee(emp.getId());
 	}
 
+	@Transactional
 	public Employee deleteEmployee(long id) {
-		Optional<Employee> empOpt = employeeRepository.findById(id);
+		Optional<Employee> empOpt = employeeRepository.findByIdFull(id);
 		if (empOpt.isPresent()) {
 			employeeRepository.deleteById(id);
 			return empOpt.get();
@@ -71,7 +74,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 	}
 
 	public List<Employee> getEmployees() {
-		return employeeRepository.findAll();
+		return employeeRepository.findAll(Sort.by("name"));
 	}
 
 	public List<Employee> getEmployees(Integer pageNo, Integer pageSize, String sortBy) {

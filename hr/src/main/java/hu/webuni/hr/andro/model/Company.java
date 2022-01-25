@@ -36,7 +36,7 @@ public class Company {
 	private String name;
 	private String address;
 
-	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "company")
 	private List<Employee> employees;
 
 	@ManyToOne
