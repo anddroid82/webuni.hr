@@ -3,9 +3,12 @@ package hu.webuni.hr.andro.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.AvgPaymentOfCompany;
@@ -20,44 +23,66 @@ public class CompanyService {
 	@Autowired
 	CompanyRepository companyRepository;
 	
+	@Transactional
 	public Employee addEmployeeToCompany(Employee employee, long companyId) {
-		Company company = this.getCompany(companyId,false);
+		Company company = this.getCompany(companyId,true);
 		if (company != null) {
+			employee.setId(employee.getId() == null?0:employee.getId());
 			Employee emp = employeeService.getEmployee(employee.getId());
 			if (emp == null) {
 				emp = employeeService.addEmployee(employee);
 			}
-			//TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ?
-			// ezzel egyáltalán kell foglalkozni, vagy nem, mert a repository mindig az aktuális állapotot adja vissza
-			if (emp.getCompany() != null) {
-				deleteEmployeeFromCompany(emp.getId(), emp.getCompany().getId());
-			}
-			emp = company.addEmployee(emp);
-			return employeeService.modifyEmployee(emp);
+//			TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ?
+//		    ezzel egyáltalán kell foglalkozni, vagy nem, mert a repository mindig az aktuális állapotot adja vissza
+//			if (emp.getCompany() != null) {
+//				deleteEmployeeFromCompany(emp.getId(), emp.getCompany().getId());
+//			}
+			return company.addEmployee(emp);
 		}
 		return null;
 	}
 	
+	@Transactional
 	public Employee deleteEmployeeFromCompany(long employeeId,long companyId) {
-		Company company = this.getCompany(companyId,false);
+		Company company = this.getCompany(companyId,true);
 		if (company != null) {
 			Employee employee = company.removeEmployee(employeeId);
-			if (employee != null) {
-				employeeService.modifyEmployee(employee);
-			}
+//			Transactional miatt nem kell a modifyEmployee 
+//			if (employee != null) {
+//				employeeService.modifyEmployee(employee);
+//			}
 			return employee;
 		}
 		return null;
 	}
 	
+	@Transactional
 	public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
-		Company company = this.getCompany(companyId,false);
+		Company company = this.getCompany(companyId,true);
 		if (company != null) {
-			company.setEmployees(employees);
+			// összes alkalmazott törlése
+			company.removeAllEmployee();
+			for (Employee emp : employees) {
+				emp.setId(emp.getId() == null?0:emp.getId());
+				Employee temp = employeeService.getEmployee(emp.getId());
+				if (temp == null) {
+					temp = employeeService.addEmployee(emp);
+				}
+				company.addEmployee(temp);
+			}
 			return true;
 		}
 		return false;
 	}
+	
+//	public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
+//		Company company = this.getCompany(companyId,false);
+//		if (company != null) {
+//			company.setEmployees(employees);
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	public List<Company> findByEmployeePaymentGreaterThan(int payment) {
 		return companyRepository.findByEmployeePaymentGreaterThan(payment);

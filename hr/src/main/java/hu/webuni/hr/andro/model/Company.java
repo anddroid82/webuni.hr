@@ -2,8 +2,8 @@ package hu.webuni.hr.andro.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,22 +13,12 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
-import javax.transaction.Transactional;
 
 @Entity
-@NamedEntityGraph(
-		name = "Company.full", 
-		attributeNodes = {
-				@NamedAttributeNode(value = "employees", subgraph = "Employee.full"),
-				@NamedAttributeNode("companyType") 
-		}, 
-		subgraphs = {
-				@NamedSubgraph(
-						name = "Employee.full", 
-						attributeNodes = { @NamedAttributeNode("position") }
-				) 
-		}
-)
+@NamedEntityGraph(name = "Company.full", attributeNodes = {
+		@NamedAttributeNode(value = "employees", subgraph = "Employee.full"),
+		@NamedAttributeNode("companyType") }, subgraphs = {
+				@NamedSubgraph(name = "Employee.full", attributeNodes = { @NamedAttributeNode("position") }) })
 public class Company {
 
 	@Id
@@ -55,7 +45,7 @@ public class Company {
 		this.employees = new ArrayList<>();
 		this.companyType = companyType;
 	}
-	
+
 	public Employee addEmployee(Employee employee) {
 		Employee emp = this.getEmployee(employee.getId());
 		if (emp == null) {
@@ -84,11 +74,14 @@ public class Company {
 		return null;
 	}
 
-	/*
-	 * public void removeAllEmployee() { ListIterator<Employee> iterator =
-	 * this.employees.listIterator(); while (iterator.hasNext()) { Employee emp =
-	 * iterator.next(); emp.setCompany(null); iterator.remove(); } }
-	 */
+	public void removeAllEmployee() {
+		ListIterator<Employee> iterator = this.employees.listIterator();
+		while (iterator.hasNext()) {
+			Employee emp = iterator.next();
+			emp.setCompany(null);
+			iterator.remove();
+		}
+	}
 
 	public Long getId() {
 		return id;

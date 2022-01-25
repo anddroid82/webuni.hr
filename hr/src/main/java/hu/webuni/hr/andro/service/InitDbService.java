@@ -1,8 +1,6 @@
 package hu.webuni.hr.andro.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -41,7 +39,7 @@ public class InitDbService {
 		companyTypeRepository.deleteAll();
 	}
 	
-	//@Transactional
+	@Transactional
 	public void insertTestData() {
 		clearDb();
 		employeeRepository.truncateTable();
@@ -80,18 +78,18 @@ public class InitDbService {
 		ct4=companyTypeRepository.save(ct4);
 		
 		Company c1 = new Company(1L, "Teszt Cég 01", "Teszt Cím 01",ct1);
+		c1=companyRepository.save(c1);
 		c1.addEmployee(e1);
 		c1.addEmployee(e2);
-		companyRepository.save(c1);
 		
 		Company c2 = new Company(2L, "Teszt Cég 02", "Teszt Cím 02",ct2);
+		c2=companyRepository.save(c2);
 		c2.addEmployee(e3);
 		c2.addEmployee(e4);
-		companyRepository.save(c2);
 		
 		Company c3 = new Company(3L, "Teszt Cég 03", "Teszt Cím 03",ct3);
+		c3=companyRepository.save(c3);
 		c3.addEmployee(e5);
 		c3.addEmployee(e6);
-		companyRepository.save(c3);
 	}
 }

@@ -110,7 +110,7 @@ public class HrCompanyRestController {
 	public ResponseEntity<EmployeeDto> addEmployeeToCompany(@RequestBody EmployeeDto employee,
 			@PathVariable Long companyId) {
 		Employee emp = companyService.addEmployeeToCompany(employeeMapper.dtoToEmployee(employee), companyId);
-		if (emp == null) {
+		if (emp != null) {
 			return ResponseEntity.ok(employeeMapper.employeeToDto(emp));
 		}
 		return ResponseEntity.notFound().build();
@@ -141,24 +141,9 @@ public class HrCompanyRestController {
 		return ResponseEntity.ok(companyService.getAvgPaymentByRankOfCompany(companyId));
 	}
 	
-	/* TODO: még nem volt idő átírni
+	
 	@PostMapping("/{companyId}/changeEmployees")
 	public boolean changeEmployeeList(@RequestBody List<EmployeeDto> employees, @PathVariable Long companyId) {
-		Company company = this.companyService.getCompany(companyId);
-		if (company != null) {
-			// TODO:
-			// company.removeAllEmployee();
-			for (EmployeeDto emp : employees) {
-				Employee temp = employeeService.getEmployee(emp.getId());
-				if (temp == null) {
-					Employee empAdded = employeeService.addEmployee(employeeMapper.dtoToEmployee(emp));
-					temp = empAdded;
-				}
-				// TODO: company.addEmployee(temp);
-			}
-			return true;
-		}
-		return false;
+		return companyService.changeEmployeeListOfCompany(employeeMapper.dtosToEmployees(employees), companyId);
 	}
-	*/
 }

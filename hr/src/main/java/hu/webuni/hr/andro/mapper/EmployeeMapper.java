@@ -8,15 +8,14 @@ import org.mapstruct.Named;
 
 import hu.webuni.hr.andro.dto.CompanyDto;
 import hu.webuni.hr.andro.dto.EmployeeDto;
-import hu.webuni.hr.andro.dto.PositionDto;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
-import hu.webuni.hr.andro.model.Position;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
 	List<EmployeeDto> employeesToDtos(List<Employee> employees);
+	List<Employee> dtosToEmployees(List<EmployeeDto> employees);
 
 	@Mapping(source = "company", target = "company", qualifiedByName = "companyToDto")
 	EmployeeDto employeeToDto(Employee employee);

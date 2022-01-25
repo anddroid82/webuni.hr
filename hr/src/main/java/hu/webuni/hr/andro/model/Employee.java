@@ -63,7 +63,6 @@ public class Employee {
 		this.position = position;
 		this.payment = payment;
 		this.entrance = entrance;
-		this.company = company;
 	}
 
 	public Company getCompany() {

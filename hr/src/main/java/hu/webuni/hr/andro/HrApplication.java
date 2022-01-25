@@ -58,7 +58,6 @@ public class HrApplication implements CommandLineRunner {
 		
 	}
 	
-	@Transactional
 	public void callInitDbService() {
 		initDbService.insertTestData();
 	}
