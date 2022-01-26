@@ -42,7 +42,7 @@ public class InitDbService {
 	@Transactional
 	public void insertTestData() {
 		clearDb();
-		employeeRepository.truncateTable();
+		//employeeRepository.truncateTable();
 		
 		Position p1=new Position(1L,"Rendszergazda",Education.ERETTSEGI,400000);
 		p1=positionRepository.save(p1);

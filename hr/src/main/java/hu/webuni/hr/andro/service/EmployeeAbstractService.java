@@ -37,13 +37,13 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		System.out.println("postconstruct");
 	}
 
-	// kerdes: a Transactional-t pontosan hol kell használni? ha metódus hív
-	// másikat, és az változtat, akkor a hívó is rá lehet rakni?
+	@Transactional
 	public Employee addEmployee(Employee employee) {
 		employee.setId(null);
 		return employeeRepository.save(employee);
 	}
-
+	
+	@Transactional
 	public Employee modifyEmployee(Employee employee) {
 		if (employeeRepository.existsById(employee.getId())) {
 			return employeeRepository.save(employee);
@@ -112,15 +112,16 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		return employeeRepository.findByPaymentGreaterThan(payment);
 	}
 
+	@Transactional
 	public List<Employee> setPaymentToMinimumByPosition(String positionName, int payment) {
 		Position position = positionRepository.getByName(positionName);
 		List<Employee> emps = employeeRepository.findByPosition_NameAndPaymentLessThan(positionName, payment);
 		for (Employee e : emps) {
 			e.setPayment(payment);
-			employeeRepository.save(e);
+			//employeeRepository.save(e);
 		}
 		position.setMinPayment(payment);
-		positionRepository.save(position);
+		//positionRepository.save(position);
 		return emps;
 	}
 
@@ -128,10 +129,13 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 
 		long id = example.getId();
 		String name = example.getName(); // név eleji egyezés case-insensitive
-		String positionName = example.getPosition().getName(); // pontos egyezés
+		Position position = example.getPosition();
+		String positionName = position !=null?position.getName():null; // pontos egyezés
 		int payment = example.getPayment(); // +-5%
 		LocalDateTime entrance = example.getEntrance(); // a megadott napon, idő nem lényeg
-		String companyName = example.getCompany().getName(); // a név eleje egyezzen, case insensitive
+		
+		Company company = example.getCompany();
+		String companyName = company!=null?company.getName():null; // a név eleje egyezzen, case insensitive
 
 		Specification<Employee> spec = Specification.where(null);
 		if (id > 0) {
@@ -140,7 +144,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		if (StringUtils.hasText(name)) {
 			spec = spec.and(EmployeeSpecifications.hasName(name));
 		}
-		if (StringUtils.hasText(name)) {
+		if (StringUtils.hasText(positionName)) {
 			spec = spec.and(EmployeeSpecifications.hasPosition(positionName));
 		}
 		if (payment > 0) {
@@ -154,5 +158,5 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		}
 		return employeeRepository.findAll(spec);
 	}
-
+	
 }

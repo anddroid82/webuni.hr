@@ -64,8 +64,8 @@ public class Company {
 		return null;
 	}
 
-	public Employee removeEmployee(long id) {
-		Employee emp = this.getEmployee(id);
+	public Employee removeEmployee(Employee emp) {
+		//Employee emp = this.getEmployee(id);
 		if (emp != null) {
 			emp.setCompany(null);
 			this.employees.remove(emp);

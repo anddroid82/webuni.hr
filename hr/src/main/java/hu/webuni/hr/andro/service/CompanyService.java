@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.AvgPaymentOfCompany;
@@ -32,11 +31,6 @@ public class CompanyService {
 			if (emp == null) {
 				emp = employeeService.addEmployee(employee);
 			}
-//			TODO: ha már benne volt az Employee másik cég dolgozói között, akkor onnan a listából törölni kell ?
-//		    ezzel egyáltalán kell foglalkozni, vagy nem, mert a repository mindig az aktuális állapotot adja vissza
-//			if (emp.getCompany() != null) {
-//				deleteEmployeeFromCompany(emp.getId(), emp.getCompany().getId());
-//			}
 			return company.addEmployee(emp);
 		}
 		return null;
@@ -46,7 +40,7 @@ public class CompanyService {
 	public Employee deleteEmployeeFromCompany(long employeeId,long companyId) {
 		Company company = this.getCompany(companyId,true);
 		if (company != null) {
-			Employee employee = company.removeEmployee(employeeId);
+			Employee employee = company.removeEmployee(employeeService.getEmployee(employeeId));
 //			Transactional miatt nem kell a modifyEmployee 
 //			if (employee != null) {
 //				employeeService.modifyEmployee(employee);
@@ -75,15 +69,6 @@ public class CompanyService {
 		return false;
 	}
 	
-//	public boolean changeEmployeeListOfCompany(List<Employee> employees, long companyId) {
-//		Company company = this.getCompany(companyId,false);
-//		if (company != null) {
-//			company.setEmployees(employees);
-//			return true;
-//		}
-//		return false;
-//	}
-	
 	public List<Company> findByEmployeePaymentGreaterThan(int payment) {
 		return companyRepository.findByEmployeePaymentGreaterThan(payment);
 	}
@@ -96,11 +81,13 @@ public class CompanyService {
 		return companyRepository.getAvgPaymentByRankOfCompany(getCompany(companyId,false));
 	}
 	
+	@Transactional
 	public Company addCompany(Company company) {
 		company.setId(null);
 		return companyRepository.save(company);
 	}
 	
+	@Transactional
 	public Company modifyCompany(Company company) {
 		if (companyRepository.existsById(company.getId())) {
 			return companyRepository.save(company);
@@ -125,6 +112,7 @@ public class CompanyService {
 		return this.deleteCompany(company.getId());
 	}
 
+	@Transactional
 	public Company deleteCompany(Long id) {
 		Optional<Company> comOpt = companyRepository.findById(id);
 		if (comOpt.isPresent()) {
