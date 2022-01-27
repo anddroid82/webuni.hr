@@ -98,10 +98,10 @@ public class InitDbService {
 		c3.addEmployee(e5);
 		c3.addEmployee(e6);
 		
-		Vacation v1=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 4), LocalDate.of(2022, 1, 6), LocalDateTime.of(2022, 1, 2, 8, 0), e1, e6);
-		Vacation v2=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 2, 2), LocalDate.of(2022, 2, 10), LocalDateTime.of(2022, 1, 5, 10, 0), e2, e5);
-		Vacation v3=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 10), LocalDate.of(2022, 1, 14), LocalDateTime.of(2022, 1, 5, 9, 0), e3, e5);
-		Vacation v4=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 8), LocalDate.of(2022, 1, 11), LocalDateTime.of(2022, 1, 3, 13, 12), e4, e6);
+		Vacation v1=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 4), LocalDate.of(2022, 1, 6), LocalDateTime.of(2022, 1, 2, 8, 0), e1, null);
+		Vacation v2=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 2, 2), LocalDate.of(2022, 2, 10), LocalDateTime.of(2022, 1, 5, 10, 0), e2, null);
+		Vacation v3=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 10), LocalDate.of(2022, 1, 14), LocalDateTime.of(2022, 1, 5, 9, 0), e3, null);
+		Vacation v4=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 8), LocalDate.of(2022, 1, 11), LocalDateTime.of(2022, 1, 3, 13, 12), e4, null);
 		v1=vacationRepository.save(v1);
 		v2=vacationRepository.save(v2);
 		v3=vacationRepository.save(v3);

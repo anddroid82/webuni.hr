@@ -7,17 +7,21 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.mapper.VacationMapper;
+import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Vacation;
 import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.service.EmployeeService;
@@ -66,5 +70,37 @@ public class HrVacationRestController {
 			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));
 		}
 	}
+	
+	@GetMapping("/{id}/{confirm}/{confirmatorId}")
+	public ResponseEntity<VacationDto> confirmVacation(@PathVariable long id, @PathVariable boolean confirm, @PathVariable long confirmatorId) {
+		Vacation vacation = vacationService.confirmVacation(id, confirm, confirmatorId);
+		if (vacation != null) {
+			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<VacationDto> deleteVacation(@PathVariable long id) {
+		Vacation vacation = vacationService.deleteVacation(id);
+		if (vacation != null) {
+			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<VacationDto> modifyVacation(@PathVariable long id,@RequestBody VacationDto vacationDto) {
+		Vacation vacation = vacationService.modifyVacation(vacationMapper.dtoToVacation(vacationDto));
+		if (vacation != null) {
+			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	
 	
 }
