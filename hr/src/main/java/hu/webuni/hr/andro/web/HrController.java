@@ -73,7 +73,7 @@ public class HrController {
 	@GetMapping("add")
 	public String addEmployee(Map<String, Object> model) {
 		Position p=positionService.getPositions().get(0);
-		model.put("employee", new EmployeeDto(0L, "", CompanyMapper.positionToDto(p), 0, null,null));
+		//model.put("employee", new EmployeeDto(0L, "", CompanyMapper.positionToDto(p), 0, null,null));
 		model.put("positions", positionService.getPositions());
 		model.put("type", "add");
 		return "modify";
@@ -107,7 +107,7 @@ public class HrController {
 		} else {
 			Employee empFromServ = employeeService.getEmployee(employee.getId());
 			empFromServ.setName(employee.getName());
-			empFromServ.setPosition(CompanyMapper.dtoToPosition(employee.getPosition()));
+			//empFromServ.setPosition(CompanyMapper.dtoToPosition(employee.getPosition()));
 			empFromServ.setPayment(employee.getPayment());
 			empFromServ.setEntrance(employee.getEntrance());
 			employeeService.modifyEmployee(empFromServ);

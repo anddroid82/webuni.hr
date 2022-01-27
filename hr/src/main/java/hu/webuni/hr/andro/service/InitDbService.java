@@ -1,5 +1,6 @@
 package hu.webuni.hr.andro.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.transaction.Transactional;
@@ -12,10 +13,13 @@ import hu.webuni.hr.andro.model.CompanyType;
 import hu.webuni.hr.andro.model.Education;
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Position;
+import hu.webuni.hr.andro.model.Vacation;
+import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.repository.CompanyRepository;
 import hu.webuni.hr.andro.repository.CompanyTypeRepository;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
 import hu.webuni.hr.andro.repository.PositionRepository;
+import hu.webuni.hr.andro.repository.VacationRepository;
 
 @Service
 public class InitDbService {
@@ -32,18 +36,20 @@ public class InitDbService {
 	@Autowired
 	PositionRepository positionRepository;
 	
+	@Autowired
+	VacationRepository vacationRepository;
+	
+	@Transactional
 	public void clearDb() {
 		employeeRepository.deleteAll();
 		positionRepository.deleteAll();
 		companyRepository.deleteAll();
 		companyTypeRepository.deleteAll();
+		//employeeRepository.truncateTable();
 	}
 	
 	@Transactional
 	public void insertTestData() {
-		clearDb();
-		//employeeRepository.truncateTable();
-		
 		Position p1=new Position(1L,"Rendszergazda",Education.ERETTSEGI,400000);
 		p1=positionRepository.save(p1);
 		Position p2=new Position(2L,"Grafikus",Education.ERETTSEGI,350000);
@@ -91,5 +97,16 @@ public class InitDbService {
 		c3=companyRepository.save(c3);
 		c3.addEmployee(e5);
 		c3.addEmployee(e6);
+		
+		Vacation v1=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 4), LocalDate.of(2022, 1, 6), LocalDateTime.of(2022, 1, 2, 8, 0), e1, e6);
+		Vacation v2=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 2, 2), LocalDate.of(2022, 2, 10), LocalDateTime.of(2022, 1, 5, 10, 0), e2, e5);
+		Vacation v3=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 10), LocalDate.of(2022, 1, 14), LocalDateTime.of(2022, 1, 5, 9, 0), e3, e5);
+		Vacation v4=new Vacation(0, VacationState.NEW, LocalDate.of(2022, 1, 8), LocalDate.of(2022, 1, 11), LocalDateTime.of(2022, 1, 3, 13, 12), e4, e6);
+		v1=vacationRepository.save(v1);
+		v2=vacationRepository.save(v2);
+		v3=vacationRepository.save(v3);
+		v4=vacationRepository.save(v4);
 	}
 }
+
+
