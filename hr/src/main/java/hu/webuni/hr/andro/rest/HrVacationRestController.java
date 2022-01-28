@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,15 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.mapper.VacationMapper;
-import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Vacation;
+import hu.webuni.hr.andro.model.VacationSearch;
 import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.service.VacationService;
@@ -44,8 +46,12 @@ public class HrVacationRestController {
 	EmployeeService employeeService;
 	
 	@GetMapping
-	public ResponseEntity<List<VacationDto>> getAll(){
-		return ResponseEntity.ok(vacationMapper.vacationsToDtos(vacationService.getAll()));
+	public ResponseEntity<List<VacationDto>> getAll(@SortDefault("id") Pageable pageable){
+		Page<Vacation> page = vacationService.getAll(pageable);
+		if (page.hasContent()) {
+			return ResponseEntity.ok(vacationMapper.vacationsToDtos(page.getContent()));
+		}
+		return ResponseEntity.notFound().build();
 	}
 	
 	@GetMapping("/{id}")
@@ -101,6 +107,14 @@ public class HrVacationRestController {
 		}
 	}
 	
-	
+	@PostMapping("/search")
+	public ResponseEntity<List<VacationDto>> search(@RequestBody(required = false) VacationSearch vacation,@SortDefault("id") Pageable pageable) {
+		Page<Vacation> page = vacationService.findVacationsByExample(vacation,pageable);
+		if (page.hasContent()) {
+			return ResponseEntity.ok(vacationMapper.vacationsToDtos(page.getContent())); 
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 	
 }

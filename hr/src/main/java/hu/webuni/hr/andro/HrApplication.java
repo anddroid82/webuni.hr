@@ -1,15 +1,10 @@
 package hu.webuni.hr.andro;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.repository.CompanyRepository;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
 import hu.webuni.hr.andro.service.InitDbService;

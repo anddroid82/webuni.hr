@@ -1,15 +1,19 @@
 package hu.webuni.hr.andro.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import hu.webuni.hr.andro.model.Employee;
 import hu.webuni.hr.andro.model.Vacation;
+import hu.webuni.hr.andro.model.VacationSearch;
 import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.repository.VacationRepository;
 
@@ -22,8 +26,8 @@ public class VacationService {
 	@Autowired
 	EmployeeService employeeService;
 	
-	public List<Vacation> getAll(){
-		return vacationRepository.findAll();
+	public Page<Vacation> getAll(Pageable pageable){
+		return vacationRepository.findAll(pageable);
 	}
 	
 	public Vacation getById(long id) {
@@ -72,5 +76,27 @@ public class VacationService {
 		return null;
 	}
 	
+	public Page<Vacation> findVacationsByExample(VacationSearch example, Pageable pageable) {
+		
+		Specification<Vacation> spec = Specification.where(null);
+		
+		if (example.getState() != null) {
+			spec = spec.and(VacationSpecifications.hasState(example.getState()));
+		}
+		if (StringUtils.hasText(example.getOwnerName())) {
+			spec = spec.and(VacationSpecifications.hasOwnerName(example.getOwnerName()));
+		}
+		if (StringUtils.hasText(example.getConfirmatorName())) {
+			spec = spec.and(VacationSpecifications.hasConfirmatorName(example.getConfirmatorName()));
+		}
+		if (example.getSubmitFrom() != null && example.getSubmitTo() != null) {
+			spec = spec.and(VacationSpecifications.betweenSubmitDates(example.getSubmitFrom(),example.getSubmitTo()));
+		}
+		if (example.getFromDate() != null && example.getToDate() != null) {
+			spec = spec.and(VacationSpecifications.intersectDates(example.getFromDate(),example.getToDate()));
+		}
+		
+		return vacationRepository.findAll(spec,pageable);
+	}
 	
 }
