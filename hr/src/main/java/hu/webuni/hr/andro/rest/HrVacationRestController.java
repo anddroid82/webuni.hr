@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.mapper.VacationMapper;
 import hu.webuni.hr.andro.model.Vacation;
 import hu.webuni.hr.andro.model.VacationSearch;
-import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.service.VacationService;
 
@@ -66,9 +64,6 @@ public class HrVacationRestController {
 	
 	@PostMapping
 	public ResponseEntity<VacationDto> createVacation(@RequestBody @Valid VacationDto vacationDto, BindingResult bindingResult) {
-		vacationDto.setState(VacationState.NEW);
-		EmployeeDto employeeDto = employeeMapper.employeeToDto(employeeService.getEmployee(vacationDto.getOwner().getId()));
-		vacationDto.setOwner(employeeDto);
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.notFound().build();
 		}else {

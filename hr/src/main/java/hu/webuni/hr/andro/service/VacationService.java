@@ -39,6 +39,12 @@ public class VacationService {
 	}
 
 	public Vacation addVacation(Vacation vacation) {
+		vacation.setState(VacationState.NEW);
+		Employee employee = employeeService.getEmployee(vacation.getOwner().getId());
+		if (employee == null) {
+			return null;
+		}
+		vacation.setOwner(employee);
 		return vacationRepository.save(vacation);
 	}
 	

@@ -7,7 +7,9 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import hu.webuni.hr.andro.model.VacationState;
+import hu.webuni.hr.andro.validation.DateAfter;
 
+@DateAfter(firstField = "fromDate",secondField = "toDate")
 public class VacationDto {
 	
 	private long id;
