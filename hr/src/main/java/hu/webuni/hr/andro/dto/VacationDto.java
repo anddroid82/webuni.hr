@@ -9,31 +9,31 @@ import javax.validation.constraints.NotNull;
 import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.validation.DateAfter;
 
-@DateAfter(firstField = "fromDate",secondField = "toDate")
+@DateAfter(firstField = "fromDate", secondField = "toDate")
 public class VacationDto {
-	
+
 	private long id;
-	
+
 	private VacationState state;
-	
+
 	@Future
 	private LocalDate fromDate;
 	@Future
 	private LocalDate toDate;
-	
+
 	@NotNull
 	private LocalDateTime submitDateTime;
-	
+
 	@NotNull
 	private EmployeeDto owner;
-	
+
 	private EmployeeDto confirmator;
-	
+
 	public VacationDto() {
 		super();
 	}
-	
-	//létrehozáshoz
+
+	// létrehozáshoz
 	public VacationDto(LocalDate fromDate, LocalDate toDate, LocalDateTime submitDateTime, EmployeeDto owner) {
 		super();
 		this.fromDate = fromDate;
@@ -42,12 +42,24 @@ public class VacationDto {
 		this.owner = owner;
 	}
 
-	public VacationDto(long id, VacationState state, LocalDate from, LocalDate to, LocalDateTime submitDateTime, EmployeeDto owner, EmployeeDto confirmator) {
+	// teszthez
+	public VacationDto(VacationState state, LocalDate fromDate, LocalDate toDate, LocalDateTime submitDateTime,
+			EmployeeDto owner) {
+		super();
+		this.state = state;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.submitDateTime = submitDateTime;
+		this.owner = owner;
+	}
+
+	public VacationDto(long id, VacationState state, LocalDate from, LocalDate to, LocalDateTime submitDateTime,
+			EmployeeDto owner, EmployeeDto confirmator) {
 		super();
 		this.id = id;
 		this.state = state;
 		this.fromDate = from;
-		this.submitDateTime=submitDateTime;
+		this.submitDateTime = submitDateTime;
 		this.toDate = to;
 		this.owner = owner;
 		this.confirmator = confirmator;
@@ -114,5 +126,5 @@ public class VacationDto {
 	public void setSubmitDateTime(LocalDateTime submitDateTime) {
 		this.submitDateTime = submitDateTime;
 	}
-	
+
 }

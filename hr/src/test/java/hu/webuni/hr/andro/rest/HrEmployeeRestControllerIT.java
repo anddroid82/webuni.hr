@@ -7,13 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
-
 import hu.webuni.hr.andro.dto.EmployeeDto;
 import hu.webuni.hr.andro.dto.PositionDto;
-import hu.webuni.hr.andro.model.Position;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class HrEmployeeRestControllerIT {
