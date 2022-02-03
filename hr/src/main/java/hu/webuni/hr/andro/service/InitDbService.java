@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.andro.model.Company;
@@ -39,6 +40,9 @@ public class InitDbService {
 	@Autowired
 	VacationRepository vacationRepository;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@Transactional
 	public void clearDb() {
 		employeeRepository.deleteAll();
@@ -67,12 +71,19 @@ public class InitDbService {
 		Position p8=new Position(8L,"Rendszer tervező",Education.EGYETEM,650000);
 		p8=positionRepository.save(p8);
 		
-		Employee e1=employeeRepository.save(new Employee(1L, "Teszt Elek", p1, 450000, LocalDateTime.of(2019, 10, 2, 0, 0),null));
-		Employee e2=employeeRepository.save(new Employee(2L, "Nap Pali", p2, 600000, LocalDateTime.of(2015, 4, 12, 0, 0),null));
-		Employee e3=employeeRepository.save(new Employee(3L, "Tra Pista", p8, 800000, LocalDateTime.of(2011, 2, 23, 0, 0),null));
-		Employee e4=employeeRepository.save(new Employee(4L, "Kovács Kázmér", p6, 700000, LocalDateTime.of(2014, 3, 13, 0, 0),null));
-		Employee e5=employeeRepository.save(new Employee(5L, "Fodor Elek", p5, 550000, LocalDateTime.of(2016, 8, 14, 0, 0),null));
-		Employee e6=employeeRepository.save(new Employee(6L, "Lukács Tamás", p1, 380000, LocalDateTime.of(2010, 2, 26, 0, 0),null));
+		Employee e1=employeeRepository.save(new Employee(1L, "Teszt Elek", p1, 450000, LocalDateTime.of(2019, 10, 2, 0, 0),null,"tesztelek",passwordEncoder.encode("tesztelek"),null));
+		Employee e2=employeeRepository.save(new Employee(2L, "Nap Pali", p2, 600000, LocalDateTime.of(2015, 4, 12, 0, 0),null,"nappali",passwordEncoder.encode("nappali"),null));
+		Employee e3=employeeRepository.save(new Employee(3L, "Tra Pista", p8, 800000, LocalDateTime.of(2011, 2, 23, 0, 0),null,"trapista",passwordEncoder.encode("trapista"),null));
+		Employee e4=employeeRepository.save(new Employee(4L, "Kovács Kázmér", p6, 700000, LocalDateTime.of(2014, 3, 13, 0, 0),null,"kovacskazmer",passwordEncoder.encode("kovacskazmer"),null));
+		Employee e5=employeeRepository.save(new Employee(5L, "Fodor Elek", p5, 550000, LocalDateTime.of(2016, 8, 14, 0, 0),null,"fodorelek",passwordEncoder.encode("fodorelek"),null));
+		Employee e6=employeeRepository.save(new Employee(6L, "Lukács Tamás", p1, 380000, LocalDateTime.of(2010, 2, 26, 0, 0),null,"lukacstamas",passwordEncoder.encode("lukacstamas"),null));
+		
+		e1.setSuperior(e5);
+		e2.setSuperior(e5);
+		e3.setSuperior(e5);
+		e4.setSuperior(e6);
+		e5.setSuperior(e6);
+		e6.setSuperior(e5);
 		
 		CompanyType ct1=new CompanyType(1L,"Kft.");
 		ct1=companyTypeRepository.save(ct1);

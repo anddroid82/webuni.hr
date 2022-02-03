@@ -3,6 +3,7 @@ package hu.webuni.hr.andro.model;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -52,6 +53,13 @@ public class Employee {
 	@JoinColumn(name = "company_id")
 	private Company company;
 	
+	@Column(unique = true)
+	private String username;
+	private String password;
+	
+	@ManyToOne
+	private Employee superior;
+	
 	public Employee() {	
 	}
 
@@ -62,6 +70,20 @@ public class Employee {
 		this.position = position;
 		this.payment = payment;
 		this.entrance = entrance;
+	}
+	
+	public Employee(Long id, @NotBlank String name, Position position, @Min(1) int payment, LocalDateTime entrance,
+			Company company, String username, String password, Employee superior) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.position = position;
+		this.payment = payment;
+		this.entrance = entrance;
+		this.company = company;
+		this.username = username;
+		this.password = password;
+		this.superior = superior;
 	}
 
 	public Company getCompany() {
@@ -116,6 +138,30 @@ public class Employee {
 		LocalDateTime to = LocalDateTime.now();
 		long months = this.getEntrance().until(to, ChronoUnit.MONTHS);
 		return months;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Employee getSuperior() {
+		return superior;
+	}
+
+	public void setSuperior(Employee superior) {
+		this.superior = superior;
 	}
 
 	@Override
