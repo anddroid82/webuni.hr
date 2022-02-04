@@ -2,6 +2,7 @@ package hu.webuni.hr.andro.dto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +29,13 @@ public class EmployeeDto {
 	
 	//@JsonBackReference
 	private CompanyDto company;
+	
+	private String username;
+	private String password;
+	
+	private EmployeeDto superior;
+	
+	private Set<String> roles;
 	
 	public EmployeeDto(Long id, String name, PositionDto position, int payment, LocalDateTime entrance, CompanyDto company) {
 		super();
@@ -83,6 +91,38 @@ public class EmployeeDto {
 		return months;
 	}
 	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public EmployeeDto getSuperior() {
+		return superior;
+	}
+
+	public void setSuperior(EmployeeDto superior) {
+		this.superior = superior;
+	}
+
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
 		return this.id+" "+this.name+" ("+this.position.getName()+") - "+this.payment+" - "+this.entrance;

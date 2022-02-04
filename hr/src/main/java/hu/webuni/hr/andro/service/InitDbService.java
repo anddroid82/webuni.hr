@@ -2,6 +2,8 @@ package hu.webuni.hr.andro.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -79,11 +81,17 @@ public class InitDbService {
 		Employee e6=employeeRepository.save(new Employee(6L, "Lukács Tamás", p1, 380000, LocalDateTime.of(2010, 2, 26, 0, 0),null,"lukacstamas",passwordEncoder.encode("lukacstamas"),null));
 		
 		e1.setSuperior(e5);
+		e1.setRoles(new HashSet<>(Arrays.asList("user")));
 		e2.setSuperior(e5);
+		e2.setRoles(new HashSet<>(Arrays.asList("user")));
 		e3.setSuperior(e5);
+		e3.setRoles(new HashSet<>(Arrays.asList("user")));
 		e4.setSuperior(e6);
+		e4.setRoles(new HashSet<>(Arrays.asList("user")));
 		e5.setSuperior(e6);
+		e5.setRoles(new HashSet<>(Arrays.asList("admin","user")));
 		e6.setSuperior(e5);
+		e6.setRoles(new HashSet<>(Arrays.asList("admin","user")));
 		
 		CompanyType ct1=new CompanyType(1L,"Kft.");
 		ct1=companyTypeRepository.save(ct1);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,6 +103,7 @@ public class HrVacationRestController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/search")
 	public ResponseEntity<List<VacationDto>> search(@RequestBody(required = false) VacationSearch vacation,@SortDefault("id") Pageable pageable) {
 		Page<Vacation> page = vacationService.findVacationsByExample(vacation,pageable);

@@ -2,9 +2,12 @@ package hu.webuni.hr.andro.model;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -59,6 +62,9 @@ public class Employee {
 	
 	@ManyToOne
 	private Employee superior;
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> roles;
 	
 	public Employee() {	
 	}
@@ -162,6 +168,14 @@ public class Employee {
 
 	public void setSuperior(Employee superior) {
 		this.superior = superior;
+	}
+
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
 	}
 
 	@Override

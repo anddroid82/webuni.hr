@@ -39,5 +39,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Pagin
 	List<Employee> findByEntranceBetween(LocalDateTime start, LocalDateTime end);
 
 	List<Employee> findByPosition_NameAndPaymentLessThan(String p, int payment);
+	
+	//@EntityGraph("Employee.full")
+	Optional<Employee> findByUsername(String username);
 
 }

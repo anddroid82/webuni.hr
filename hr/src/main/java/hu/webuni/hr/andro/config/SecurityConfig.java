@@ -1,13 +1,17 @@
 package hu.webuni.hr.andro.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -15,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	UserDetailsService userDetailsService;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -22,12 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.inMemoryAuthentication()
-			.passwordEncoder(passwordEncoder())
-			.withUser("user").authorities("user").password(passwordEncoder().encode("password"))
-			.and()
-			.withUser("admin").authorities("user","admin").password(passwordEncoder().encode("password"));
+		auth.authenticationProvider(authenticationProvider());
+//		auth
+//			.inMemoryAuthentication()
+//			.passwordEncoder(passwordEncoder())
+//			.withUser("user").authorities("user").password(passwordEncoder().encode("password"))
+//			.and()
+//			.withUser("admin").authorities("user","admin").password(passwordEncoder().encode("password"));
 	}
 
 	@Override
@@ -39,11 +47,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.GET).hasAuthority("admin")
+			.antMatchers(HttpMethod.GET).hasAuthority("user")
 			.anyRequest()
 			.authenticated();
 	}
 
-	
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider daoAuthenticationProvider=new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+		daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+		return daoAuthenticationProvider;
+	}
 	
 }

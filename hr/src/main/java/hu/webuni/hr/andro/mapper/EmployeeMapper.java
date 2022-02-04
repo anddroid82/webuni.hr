@@ -15,9 +15,17 @@ public interface EmployeeMapper {
 	List<Employee> dtosToEmployees(List<EmployeeDto> employees);
 
 	@Mapping(target = "company.employees", ignore = true)
+	@Mapping(target = "superior.superior", ignore = true)
+	@Mapping(target = "superior.company", ignore = true)
+	@Mapping(target = "superior.password", ignore = true)
+	@Mapping(target = "password", ignore = true)
 	EmployeeDto employeeToDto(Employee employee);
 
 	@Mapping(target = "company.employees", ignore = true)
+	@Mapping(target = "superior.superior", ignore = true)
+	@Mapping(target = "superior.company", ignore = true)
+	@Mapping(target = "superior.password", ignore = true)
+	@Mapping(target = "password", ignore = true)
 	Employee dtoToEmployee(EmployeeDto employeeDto);	
 	
 }
