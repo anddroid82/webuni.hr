@@ -1,15 +1,16 @@
 package hu.webuni.hr.andro.rest;
 
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.mapper.VacationMapper;
 import hu.webuni.hr.andro.model.Vacation;
 import hu.webuni.hr.andro.model.VacationSearch;
+import hu.webuni.hr.andro.security.EmployeeUserDetails;
 import hu.webuni.hr.andro.service.EmployeeService;
 import hu.webuni.hr.andro.service.VacationService;
 
@@ -43,6 +44,7 @@ public class HrVacationRestController {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
 	
 	@GetMapping
 	public ResponseEntity<List<VacationDto>> getAll(@SortDefault("id") Pageable pageable){
@@ -64,12 +66,12 @@ public class HrVacationRestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<VacationDto> createVacation(@RequestBody @Valid VacationDto vacationDto, BindingResult bindingResult) {
+	@PreAuthorize("#vacationDto.owner.id == authentication.principal.employee.id")
+	public ResponseEntity<VacationDto> createVacation(@RequestBody @Valid VacationDto vacationDto, BindingResult bindingResult, @AuthenticationPrincipal EmployeeUserDetails userDetails) {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.notFound().build();
 		}else {
-			Vacation vacation = vacationService.addVacation(vacationMapper.dtoToVacation(vacationDto));
-			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));
+			return ResponseEntity.ok(vacationMapper.vacationToDto(vacationService.addVacation(vacationMapper.dtoToVacation(vacationDto))));
 		}
 	}
 	
@@ -103,9 +105,9 @@ public class HrVacationRestController {
 		}
 	}
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/search")
 	public ResponseEntity<List<VacationDto>> search(@RequestBody(required = false) VacationSearch vacation,@SortDefault("id") Pageable pageable) {
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		Page<Vacation> page = vacationService.findVacationsByExample(vacation,pageable);
 		if (page.hasContent()) {
 			return ResponseEntity.ok(vacationMapper.vacationsToDtos(page.getContent())); 

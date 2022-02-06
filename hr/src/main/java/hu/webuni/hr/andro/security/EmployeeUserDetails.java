@@ -1,4 +1,4 @@
-package hu.webuni.hr.andro.model;
+package hu.webuni.hr.andro.security;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -7,30 +7,37 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import hu.webuni.hr.andro.model.Employee;
+
 public class EmployeeUserDetails implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Employee employee;
+	public Employee employee;
+//	private String username;
+//	private String password;
+//	private Set<String> roles;
 	
 	public EmployeeUserDetails(Employee employee) {
-		super();
 		this.employee = employee;
+//		this.username = employee.getUsername();
+//		this.password = employee.getPassword();
+//		this.roles = employee.getRoles();
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return employee.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+		return this.employee.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 	}
 
 	@Override
 	public String getPassword() {
-		return employee.getPassword(); 
+		return this.employee.getPassword(); 
 	}
 
 	@Override
 	public String getUsername() {
-		return employee.getUsername();
+		return this.employee.getUsername();
 	}
 
 	@Override
@@ -55,6 +62,14 @@ public class EmployeeUserDetails implements UserDetails {
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 	
 	

@@ -38,6 +38,7 @@ public class VacationService {
 		return null;
 	}
 
+	//@Transactional
 	public Vacation addVacation(Vacation vacation) {
 		vacation.setState(VacationState.NEW);
 		Employee employee = employeeService.getEmployee(vacation.getOwner().getId());
@@ -71,6 +72,7 @@ public class VacationService {
 		}
 		return null;
 	}
+	
 	
 	@Transactional
 	public Vacation deleteVacation(long id) {

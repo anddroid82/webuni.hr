@@ -1,4 +1,4 @@
-package hu.webuni.hr.andro.service;
+package hu.webuni.hr.andro.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import hu.webuni.hr.andro.model.Employee;
-import hu.webuni.hr.andro.model.EmployeeUserDetails;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 @Service

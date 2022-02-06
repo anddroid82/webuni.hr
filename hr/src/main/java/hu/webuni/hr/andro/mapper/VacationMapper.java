@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.model.Vacation;
 
-@Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
+@Mapper(componentModel = "spring", uses = {EmployeeMapper.class, CompanyMapper.class})
 public interface VacationMapper {
 	
 	VacationDto vacationToDto(Vacation vacation);
