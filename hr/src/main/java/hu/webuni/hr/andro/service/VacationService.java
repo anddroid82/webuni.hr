@@ -61,7 +61,7 @@ public class VacationService {
 	public Vacation confirmVacation(long vacationId, boolean confirm, long confirmatorId) {
 		Vacation vacation = this.getById(vacationId);
 		Employee confirmator = employeeService.getEmployee(confirmatorId);
-		if (vacation != null && confirmator != null && vacation.getState() == VacationState.NEW) {
+		if (vacation != null && confirmator != null && vacation.getState() == VacationState.NEW && vacation.getOwner().getSuperior().getId() == confirmatorId) {
 			if (confirm) {
 				vacation.setState(VacationState.AGREE);
 			}else {
