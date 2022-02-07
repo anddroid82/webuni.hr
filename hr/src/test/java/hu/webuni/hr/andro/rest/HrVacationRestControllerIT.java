@@ -1,8 +1,6 @@
 package hu.webuni.hr.andro.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,8 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import hu.webuni.hr.andro.dto.EmployeeDto;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.model.VacationState;
@@ -25,6 +22,12 @@ import hu.webuni.hr.andro.service.VacationService;
 public class HrVacationRestControllerIT {
 	
 	private static final String BASE_URI = "/api/vacations";
+	
+	private static final String username = "tesztelek";
+	private static final String password = "tesztelek";
+	
+	private static final String adminusername = "fodorelek";
+	private static final String adminpassword = "fodorelek";
 	
 	@Autowired
 	WebTestClient webTestClient;
@@ -62,6 +65,7 @@ public class HrVacationRestControllerIT {
 		
 	}
 	
+	
 	@Test
 	void testConfirmVacation() throws Exception {
 		//22/true/13
@@ -74,16 +78,24 @@ public class HrVacationRestControllerIT {
 		vacationBefore.setConfirmator(employeeMapper.employeeToDto(employeeService.getEmployee(empId)));
 		VacationDto vacationAfter = getVacation(vacId);
 		assertThat(vacationAfter).usingRecursiveComparison().isEqualTo(vacationBefore);
-		
 	}
 	
 	
 	private void confirmVacation(long vacId,boolean confirm, long employeeId) {
-		webTestClient.get().uri(BASE_URI+"/"+vacId+"/"+confirm+"/"+employeeId).exchange().expectStatus().isOk();
+		webTestClient.mutate().filter(ExchangeFilterFunctions.basicAuthentication(adminusername, adminpassword))
+		.build()
+			.get().uri(BASE_URI+"/"+vacId+"/"+confirm+"/"+employeeId).exchange().expectStatus().isOk();
 	}
 
 	private void createVacation(VacationDto vacDto) {
-		webTestClient.post().uri(BASE_URI).bodyValue(vacDto).exchange().expectStatus().isOk();
+		//System.out.println("Employee: "+employeeService.getEmployee(9));
+		String username = "tesztelek";
+		String password = "tesztelek";
+		webTestClient.mutate().filter(ExchangeFilterFunctions.basicAuthentication(username, password))
+			.build()
+			.post().uri(BASE_URI).bodyValue(vacDto).exchange().expectStatus().isOk();
+		
+		//webTestClient.post().uri(BASE_URI).bodyValue(vacDto).exchange().expectStatus().isOk();
 	}
 	
 	/*private void createVacationFail(VacationDto vacDto) {
@@ -91,13 +103,19 @@ public class HrVacationRestControllerIT {
 	}*/
 
 	private List<VacationDto> getAllVacations() {
-		List<VacationDto> vacations = webTestClient.get().uri(BASE_URI).exchange().expectStatus().isOk()
+		List<VacationDto> vacations = 
+				webTestClient.mutate().filter(ExchangeFilterFunctions.basicAuthentication(username, password))
+				.build()
+				.get().uri(BASE_URI).exchange().expectStatus().isOk()
 				.expectBodyList(VacationDto.class).returnResult().getResponseBody();
 		return vacations;
 	}
 	
 	private VacationDto getVacation(long id) {
-		VacationDto vacation = webTestClient.get().uri(BASE_URI+"/"+id).exchange().expectStatus().isOk()
+		VacationDto vacation =
+				webTestClient.mutate().filter(ExchangeFilterFunctions.basicAuthentication(username, password))
+				.build()
+				.get().uri(BASE_URI+"/"+id).exchange().expectStatus().isOk()
 				.expectBody(VacationDto.class).returnResult().getResponseBody();
 		return vacation;
 	}
