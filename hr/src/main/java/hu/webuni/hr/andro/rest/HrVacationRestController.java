@@ -99,7 +99,8 @@ public class HrVacationRestController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<VacationDto> modifyVacation(@PathVariable long id,@RequestBody VacationDto vacationDto) {
+	@PreAuthorize("#vacationDto.owner.id == authentication.principal.employee.id")
+	public ResponseEntity<VacationDto> modifyVacation(@PathVariable long id,@RequestBody @Valid VacationDto vacationDto) {
 		Vacation vacation = vacationService.modifyVacation(vacationMapper.dtoToVacation(vacationDto));
 		if (vacation != null) {
 			return ResponseEntity.ok(vacationMapper.vacationToDto(vacation));

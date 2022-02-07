@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +17,7 @@ import hu.webuni.hr.andro.model.Vacation;
 import hu.webuni.hr.andro.model.VacationSearch;
 import hu.webuni.hr.andro.model.VacationState;
 import hu.webuni.hr.andro.repository.VacationRepository;
+import hu.webuni.hr.andro.security.EmployeeUserDetails;
 
 @Service
 public class VacationService {
@@ -51,7 +53,8 @@ public class VacationService {
 	
 	@Transactional
 	public Vacation modifyVacation(Vacation vacation) {
-		if (vacationRepository.existsById(vacation.getId()) && vacation.getState() == VacationState.NEW) {
+		Vacation vacationOld = this.getById(vacation.getId());
+		if (vacationOld != null && vacationOld.getState() == VacationState.NEW) {
 			return vacationRepository.save(vacation);
 		}
 		return null;
@@ -77,9 +80,12 @@ public class VacationService {
 	@Transactional
 	public Vacation deleteVacation(long id) {
 		Vacation vacation = this.getById(id);
-		if (vacation != null && vacation.getState() == VacationState.NEW) {
-			vacationRepository.delete(vacation);
-			return vacation;
+		EmployeeUserDetails user = (EmployeeUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (user.getEmployee().getId() == vacation.getOwner().getId()) {
+			if (vacation != null && vacation.getState() == VacationState.NEW) {
+				vacationRepository.delete(vacation);
+				return vacation;
+			}
 		}
 		return null;
 	}
