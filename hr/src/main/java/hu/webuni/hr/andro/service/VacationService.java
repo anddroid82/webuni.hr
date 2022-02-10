@@ -33,7 +33,7 @@ public class VacationService {
 	}
 	
 	public Vacation getById(long id) {
-		Optional<Vacation> optVac = vacationRepository.findById(id);
+		Optional<Vacation> optVac = vacationRepository.findByIdFull(id);
 		if (optVac.isPresent()) {
 			return optVac.get();
 		}

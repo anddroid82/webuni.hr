@@ -40,7 +40,8 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 				@NamedSubgraph(
 						name = "Superior.full",
 						attributeNodes = {@NamedAttributeNode("position"),@NamedAttributeNode("roles")}
-				),
+				)
+				,
 				@NamedSubgraph(
 						name ="Junior.full",
 						attributeNodes = {@NamedAttributeNode("position"),@NamedAttributeNode("roles")}
@@ -107,7 +108,9 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.superior = superior;
-		this.superior.junior.add(this);
+		if (this.superior != null) {
+			this.superior.junior.add(this);
+		}
 	}
 
 	public Company getCompany() {

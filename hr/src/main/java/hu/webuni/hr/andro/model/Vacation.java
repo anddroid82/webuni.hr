@@ -8,8 +8,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 
 
+@NamedEntityGraph(
+		name = "Vacation.full", 
+		attributeNodes = {
+				@NamedAttributeNode(value = "owner", subgraph = "Employee.full"),
+				@NamedAttributeNode(value = "confirmator",subgraph = "Employee.full")
+		},
+		subgraphs = {
+				@NamedSubgraph(
+						name = "Employee.full",
+						attributeNodes = {
+								@NamedAttributeNode("position"),
+								@NamedAttributeNode(value="company"),
+								@NamedAttributeNode(value="superior", subgraph = "Superior.full"),
+								@NamedAttributeNode("junior"),
+								@NamedAttributeNode("roles")
+						}
+				),
+				@NamedSubgraph(
+						name = "Superior.full",
+						attributeNodes = {
+								@NamedAttributeNode("position")
+						}
+				)
+				
+		}
+)
 @Entity
 public class Vacation {
 
