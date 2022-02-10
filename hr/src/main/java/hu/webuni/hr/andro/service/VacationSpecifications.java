@@ -22,7 +22,7 @@ public class VacationSpecifications {
 	}
 	
 	public static Specification<Vacation> hasConfirmatorName(String confirmatorName) {
-		return (root, cq, cb) -> cb.like(cb.lower(root.get(Vacation_.owner).get(Employee_.name)), confirmatorName.toLowerCase()+"%");
+		return (root, cq, cb) -> cb.like(cb.lower(root.get(Vacation_.confirmator).get(Employee_.name)), confirmatorName.toLowerCase()+"%");
 	}
 
 	public static Specification<Vacation> betweenSubmitDates(LocalDate submitFrom, LocalDate submitTo) {
