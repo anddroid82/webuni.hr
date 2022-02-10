@@ -74,7 +74,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 	}
 
 	public List<Employee> getEmployees() {
-		return employeeRepository.findAll(Sort.by("name"));
+		return employeeRepository.findAllFull();
 	}
 
 	public List<Employee> getEmployees(Integer pageNo, Integer pageSize, String sortBy) {

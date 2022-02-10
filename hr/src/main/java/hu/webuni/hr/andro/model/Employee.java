@@ -109,7 +109,7 @@ public class Employee {
 		this.password = password;
 		this.superior = superior;
 		if (this.superior != null) {
-			this.superior.junior.add(this);
+			//this.superior.junior.add(this);
 		}
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import hu.webuni.hr.andro.model.Company;
 import hu.webuni.hr.andro.model.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, PagingAndSortingRepository<Employee, Long>,
@@ -21,6 +22,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Pagin
 	@EntityGraph("Employee.full")
 	@Query("select e from Employee e where e.id=:id")
 	Optional<Employee> findByIdFull(long id);
+	
+	@EntityGraph("Employee.full")
+	@Query("select e from Employee e")
+	List<Employee> findAllFull();
+	
 
 	// a kezdeti adatfeltöltéshez használjuk, hogy törölje az összes employee
 	// rekordot és
