@@ -34,7 +34,7 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 
 	@PostConstruct
 	public void postConstruct() {
-		System.out.println("postconstruct");
+		//System.out.println("postconstruct");
 	}
 
 	@Transactional

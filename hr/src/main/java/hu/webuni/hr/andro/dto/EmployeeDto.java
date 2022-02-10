@@ -2,6 +2,7 @@ package hu.webuni.hr.andro.dto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.Min;
@@ -34,6 +35,8 @@ public class EmployeeDto {
 	private String password;
 	
 	private EmployeeDto superior;
+	
+	private List<EmployeeDto> junior;
 	
 	private Set<String> roles;
 	
@@ -123,6 +126,8 @@ public class EmployeeDto {
 		this.roles = roles;
 	}
 
+	
+	
 	@Override
 	public String toString() {
 		return this.id+" "+this.name+" ("+this.position.getName()+") - "+this.payment+" - "+this.entrance;
@@ -137,5 +142,15 @@ public class EmployeeDto {
 		}
 		return false;
 	}
+
+	public List<EmployeeDto> getJunior() {
+		return junior;
+	}
+
+	public void setJunior(List<EmployeeDto> junior) {
+		this.junior = junior;
+	}
+
+	
 	
 }

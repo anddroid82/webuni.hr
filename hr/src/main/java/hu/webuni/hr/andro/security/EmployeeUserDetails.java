@@ -13,7 +13,8 @@ public class EmployeeUserDetails implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public Employee employee;
+	private Employee employee;
+	private JwtDecodedUserData jwtDecodedUserData;
 //	private String username;
 //	private String password;
 //	private Set<String> roles;

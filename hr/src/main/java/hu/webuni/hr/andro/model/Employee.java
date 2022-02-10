@@ -2,6 +2,8 @@ package hu.webuni.hr.andro.model;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -26,7 +29,8 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 				@NamedAttributeNode(value = "position"),
 				@NamedAttributeNode(value = "company",subgraph = "Company.full"),
 				@NamedAttributeNode(value = "roles"),
-				@NamedAttributeNode(value = "superior", subgraph = "Superior.full")
+				@NamedAttributeNode(value = "superior", subgraph = "Superior.full"),
+				@NamedAttributeNode(value = "junior", subgraph = "Junior.full")
 		},
 		subgraphs = {
 				@NamedSubgraph(
@@ -35,6 +39,10 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 				),
 				@NamedSubgraph(
 						name = "Superior.full",
+						attributeNodes = {@NamedAttributeNode("position"),@NamedAttributeNode("roles")}
+				),
+				@NamedSubgraph(
+						name ="Junior.full",
 						attributeNodes = {@NamedAttributeNode("position"),@NamedAttributeNode("roles")}
 				)
 		}
@@ -68,6 +76,9 @@ public class Employee {
 	
 	@ManyToOne
 	private Employee superior;
+	
+	@OneToMany(mappedBy = "superior")
+	private List<Employee> junior = new ArrayList<>();
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> roles;
@@ -174,6 +185,9 @@ public class Employee {
 
 	public void setSuperior(Employee superior) {
 		this.superior = superior;
+		//if (superior != null) {
+			this.superior.junior.add(this);
+		//}
 	}
 
 	public Set<String> getRoles() {
@@ -196,6 +210,16 @@ public class Employee {
 		}
 		return false;
 	}
+
+	public List<Employee> getJunior() {
+		return junior;
+	}
+
+	public void setJunior(List<Employee> junior) {
+		this.junior = junior;
+	}
+
+	
 
 }
 
