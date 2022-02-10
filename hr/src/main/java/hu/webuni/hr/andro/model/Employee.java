@@ -107,6 +107,7 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.superior = superior;
+		this.superior.junior.add(this);
 	}
 
 	public Company getCompany() {
@@ -185,9 +186,7 @@ public class Employee {
 
 	public void setSuperior(Employee superior) {
 		this.superior = superior;
-		//if (superior != null) {
-			this.superior.junior.add(this);
-		//}
+		this.superior.junior.add(this);
 	}
 
 	public Set<String> getRoles() {
