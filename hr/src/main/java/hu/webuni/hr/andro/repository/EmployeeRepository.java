@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -26,6 +29,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Pagin
 	@EntityGraph("Employee.full")
 	@Query("select e from Employee e")
 	List<Employee> findAllFull();
+	
+	@EntityGraph("Employee.full")
+	@Query("select e from Employee e")
+	List<Employee> findAllFull(Sort sort);
+	
+	@EntityGraph("Employee.full")
+	@Query("select e from Employee e")
+	Page<Employee> findAllFull(Pageable pageable);
 	
 
 	// a kezdeti adatfeltöltéshez használjuk, hogy törölje az összes employee

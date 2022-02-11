@@ -29,8 +29,8 @@ import hu.webuni.hr.andro.validation.BeforeNow;
 				@NamedAttributeNode(value = "position"),
 				@NamedAttributeNode(value = "company",subgraph = "Company.full"),
 				@NamedAttributeNode(value = "roles"),
-				@NamedAttributeNode(value = "superior", subgraph = "Superior.full"),
-				@NamedAttributeNode(value = "junior", subgraph = "Junior.full")
+				@NamedAttributeNode(value = "superior", subgraph = "Superior.full")
+				//@NamedAttributeNode(value = "junior", subgraph = "Junior.full")
 		},
 		subgraphs = {
 				@NamedSubgraph(

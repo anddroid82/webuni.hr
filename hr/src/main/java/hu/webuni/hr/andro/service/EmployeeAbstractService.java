@@ -51,10 +51,13 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		return null;
 	}
 
+	@Transactional
 	public Employee getEmployee(long id) {
 		Optional<Employee> empOpt = employeeRepository.findByIdFull(id);
 		if (empOpt.isPresent()) {
-			return empOpt.get();
+			Employee employee = empOpt.get();
+			employee.getJunior().iterator();
+			return employee;
 		}
 		return null;
 	}
@@ -72,20 +75,30 @@ public abstract class EmployeeAbstractService implements EmployeeService {
 		}
 		return null;
 	}
-
+	
+	@Transactional
 	public List<Employee> getEmployees() {
 		return employeeRepository.findAllFull();
 	}
 
+	@Transactional
 	public List<Employee> getEmployees(Integer pageNo, Integer pageSize, String sortBy) {
 		if (pageNo == -1 || pageSize == -1) {
 			Sort sort = Sort.by(sortBy);
-			return employeeRepository.findAll(sort);
+			List<Employee> all = employeeRepository.findAllFull(sort);
+			for (Employee e : all) {
+				e.getJunior().iterator();
+			}
+			return all; 
 		} else {
 			Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-			Page<Employee> page = employeeRepository.findAll(pageable);
+			Page<Employee> page = employeeRepository.findAllFull(pageable);
 			if (page.hasContent()) {
-				return page.getContent();
+				List<Employee> all = page.getContent();
+				for (Employee e : all) {
+					e.getJunior().iterator();
+				}
+				return all; 
 			}
 		}
 
