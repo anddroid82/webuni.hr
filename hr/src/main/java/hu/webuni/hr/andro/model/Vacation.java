@@ -25,8 +25,14 @@ import javax.persistence.NamedSubgraph;
 						attributeNodes = {
 								@NamedAttributeNode("position"),
 								@NamedAttributeNode(value="company"),
-								@NamedAttributeNode(value="superior"),
+								@NamedAttributeNode(value="superior", subgraph = "Superior.full"),
 								@NamedAttributeNode("roles")
+						}
+				),
+				@NamedSubgraph(
+						name = "Superior.full",
+						attributeNodes = {
+								@NamedAttributeNode("position")
 						}
 				)
 		}
