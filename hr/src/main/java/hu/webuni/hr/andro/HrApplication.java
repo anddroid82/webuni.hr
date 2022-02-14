@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import hu.webuni.hr.andro.config.HrConfigProperties;
 import hu.webuni.hr.andro.repository.CompanyRepository;
 import hu.webuni.hr.andro.repository.EmployeeRepository;
 import hu.webuni.hr.andro.service.InitDbService;
@@ -21,6 +22,9 @@ public class HrApplication implements CommandLineRunner {
 	
 	@Autowired
 	InitDbService initDbService;
+	
+	@Autowired
+	HrConfigProperties hrConfigProperties;
 
 	/*
 	private List<Employee> employees = new ArrayList<>();
@@ -50,7 +54,6 @@ public class HrApplication implements CommandLineRunner {
 		 */
 
 		callInitDbService();
-		
 	}
 	
 	public void callInitDbService() {
