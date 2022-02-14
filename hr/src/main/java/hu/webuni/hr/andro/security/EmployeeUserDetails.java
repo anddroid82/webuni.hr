@@ -3,11 +3,13 @@ package hu.webuni.hr.andro.security;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import hu.webuni.hr.andro.model.Employee;
+import hu.webuni.hr.andro.repository.EmployeeRepository;
 
 public class EmployeeUserDetails implements UserDetails {
 	
@@ -15,9 +17,9 @@ public class EmployeeUserDetails implements UserDetails {
 	
 	private Employee employee;
 	private JwtDecodedUserData jwtDecodedUserData;
-//	private String username;
-//	private String password;
-//	private Set<String> roles;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
 	
 	public EmployeeUserDetails(Employee employee) {
 		this.employee = employee;
@@ -71,6 +73,14 @@ public class EmployeeUserDetails implements UserDetails {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public JwtDecodedUserData getJwtDecodedUserData() {
+		return jwtDecodedUserData;
+	}
+
+	public void setJwtDecodedUserData(JwtDecodedUserData jwtDecodedUserData) {
+		this.jwtDecodedUserData = jwtDecodedUserData;
 	}
 	
 	
