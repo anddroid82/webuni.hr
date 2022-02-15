@@ -31,5 +31,6 @@ public interface VacationMapper {
 	@Mapping(target = "company", ignore = true)
 	@Mapping(target = "junior", ignore = true)
 	@Mapping(target = "roles", ignore = true)
+	@Mapping(target = "password", ignore = true)
 	EmployeeDto ownerSuperior(Employee e);
 }

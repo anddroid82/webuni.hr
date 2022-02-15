@@ -33,7 +33,7 @@ public class JwtService {
 	EmployeeRepository employeeRepository;
 	
 	private static String ISSUER;
-	private static Algorithm ALG = Algorithm.HMAC256("asdas");
+	private static Algorithm ALG;
 	private static final String AUTH = "auth";
 	private static final String CLAIM_USER = "user";
 	private static final String CLAIM_JUNIOR = "junior";
@@ -41,17 +41,11 @@ public class JwtService {
 	
 	@PostConstruct
 	public void securityInit() throws Exception {
-		System.out.println(ALG.getClass());
+		Class<Algorithm> c = Algorithm.class;
+		Method m = c.getMethod(hrConfigProperties.getAlgorithm(), String.class);
+		ALG = (Algorithm) m.invoke(null, hrConfigProperties.getSecret());
 		ISSUER = hrConfigProperties.getIssuer();
-		Method m = Class.forName("com.auth0.jwt.algorithms."+hrConfigProperties.getAlgorithm()).getDeclaredMethod(hrConfigProperties.getAlgorithm(), String.class);
-		ALG = (Algorithm) m.invoke(ALG, hrConfigProperties.getSecret());
-		/*try {
-			Method m = ALG.getClass().getDeclaredMethod(hrConfigProperties.getAlgorithm(), String.class);
-			ALG = (Algorithm) m.invoke(ALG, hrConfigProperties.getSecret());
-		}catch(Exception ex) {
-			//System.out.println(ex.getLocalizedMessage());
-		}*/
-		
+		//System.out.println(ALG);
 	}
 	
 	public String createToken(EmployeeUserDetails userDetails) {
