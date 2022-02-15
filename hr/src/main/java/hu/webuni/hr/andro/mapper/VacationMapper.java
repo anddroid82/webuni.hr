@@ -21,6 +21,12 @@ public interface VacationMapper {
 	@Mapping(target = "owner.superior", qualifiedByName = "ownerSuperior")
 	//@Mapping(target = "owner.superior.superior", ignore = true)
 	VacationDto vacationToDto(Vacation vacation);
+	
+	@Mapping(target = "owner.junior", ignore = true)
+	@Mapping(target = "owner.company", ignore = true)
+	@Mapping(target = "owner.password", ignore = true)
+	@Mapping(target = "owner.roles", ignore = true)
+	@Mapping(target = "owner.superior", qualifiedByName = "ownerSuperiorDto")
 	Vacation dtoToVacation(VacationDto vacation);
 	
 	List<VacationDto> vacationsToDtos(List<Vacation> vacations);
@@ -33,4 +39,12 @@ public interface VacationMapper {
 	@Mapping(target = "roles", ignore = true)
 	@Mapping(target = "password", ignore = true)
 	EmployeeDto ownerSuperior(Employee e);
+	
+	@Named("ownerSuperiorDto")
+	@Mapping(target = "superior", ignore = true)
+	@Mapping(target = "company", ignore = true)
+	@Mapping(target = "junior", ignore = true)
+	@Mapping(target = "roles", ignore = true)
+	@Mapping(target = "password", ignore = true)
+	Employee ownerSuperiorDto(EmployeeDto e);
 }
