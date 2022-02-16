@@ -1,9 +1,11 @@
 package hu.webuni.hr.andro.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,8 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
+
 import hu.webuni.hr.andro.dto.VacationDto;
 import hu.webuni.hr.andro.mapper.EmployeeMapper;
 import hu.webuni.hr.andro.mapper.VacationMapper;
@@ -122,7 +126,15 @@ public class HrVacationRestControllerIT {
 	
 	private String createToken() {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		return jwtService.createToken((EmployeeUserDetails)authentication.getPrincipal());
+		
+		EmployeeUserDetails emp = (EmployeeUserDetails)authentication.getPrincipal();
+		Authentication auth = new UsernamePasswordAuthenticationToken(emp, null, emp.getAuthorities());
+		
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		
+		String token = jwtService.createToken(emp); 
+		
+		return token;
 	}
 	
 	

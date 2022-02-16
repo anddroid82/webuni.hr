@@ -68,7 +68,7 @@ public class HrVacationRestController {
 	}
 	
 	@PostMapping
-	//@PreAuthorize("#vacationDto.owner.id == authentication.principal.employee.id")
+	@PreAuthorize("#vacationDto.owner.id == authentication.principal.employee.id")
 	public ResponseEntity<VacationDto> createVacation(@RequestBody @Valid VacationDto vacationDto, BindingResult bindingResult, @AuthenticationPrincipal EmployeeUserDetails userDetails) {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.notFound().build();
